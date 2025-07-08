@@ -1,19 +1,24 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import { Kanit } from 'next/font/google';
 import './globals.css';
 import { ThemeProvider } from '@mui/material';
 import theme from '@/theme/theme';
 
-export const metadata: Metadata = {
-  title: 'ระบบลงทะเบียนรับปริญญา',
-  description: 'ระบบลงทะเบียนรับปริญญา และซ้อมรับปริญญา',
-};
 const kanit = Kanit({
   weight: '400',
   subsets: ['latin'],
   variable: '--font-kanit',
 });
-
+export const metadata: Metadata = {
+  title: 'ระบบลงทะเบียนรับปริญญา',
+  description: 'ระบบลงทะเบียนรับปริญญา และซ้อมรับปริญญา',
+};
+export const viewport: Viewport = {
+  width: 'width=device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+};
 export default function RootLayout({
   children,
 }: Readonly<{

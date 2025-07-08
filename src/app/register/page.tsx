@@ -1,7 +1,7 @@
 'use client';
 import BubbleComponent from '@/components/Buble.component';
 import CreatePasswordDialog from '@/components/dialog/Create-Password-Dialog.component';
-import { NamePrefix } from '@/model/form.model';
+import RegisterFormComponent from '@/components/Register-Form.component';
 import {
   backgroundLinear,
   buttonBgLinear,
@@ -10,17 +10,10 @@ import {
 import {
   Box,
   Button,
-  FormControl,
-  Grid,
-  InputLabel,
-  MenuItem,
-  Select,
-  SelectChangeEvent,
   Stack,
   Step,
   StepLabel,
   Stepper,
-  TextField,
   Typography,
 } from '@mui/material';
 import Image from 'next/image';
@@ -30,7 +23,6 @@ import { useState } from 'react';
 const steps = ['กรอกข้อมูลส่วนตัว', 'สร้างรหัสผ่าน'];
 export default function RegisterPage() {
   const [open, onOpen] = useState(false);
-  const [namePrefix, setNamePrefix] = useState<NamePrefix>(NamePrefix.MR);
   const [stack, setStack] = useState<number>(0);
   function handleClose() {
     onOpen(false);
@@ -38,9 +30,6 @@ export default function RegisterPage() {
   function handleOpen() {
     onOpen(true);
     setStack(1);
-  }
-  function preFixChange(event: SelectChangeEvent) {
-    setNamePrefix(event.target.value as NamePrefix);
   }
 
   return (
@@ -114,92 +103,7 @@ export default function RegisterPage() {
                 ))}
               </Stepper>
             </Box>
-            <Stack paddingX={3} spacing={2}>
-              <TextField
-                size='small'
-                required
-                type='text'
-                id='username'
-                autoFocus
-                placeholder='65309010013'
-                label='รหัสนักศึกษา / อาจารย์'
-              />
-              <Grid container>
-                <Grid size={3}>
-                  <FormControl size='small'>
-                    <InputLabel id='select-prefix-list'>คำนำหน้า</InputLabel>
-                    <Select
-                      labelId='select-prefix-list'
-                      id='select-prefix'
-                      value={namePrefix}
-                      label='คำนำหน้า'
-                      onChange={preFixChange}
-                    >
-                      <MenuItem value={NamePrefix.MR}>นาย</MenuItem>
-                      <MenuItem value={NamePrefix.MS}>นาง</MenuItem>
-                    </Select>
-                  </FormControl>
-                </Grid>
-                <Grid size={'auto'}>
-                  <TextField
-                    size='small'
-                    required
-                    type='password'
-                    id='name'
-                    label='ชื่อจริง'
-                  />
-                </Grid>
-              </Grid>
-
-              <TextField
-                size='small'
-                required
-                type='password'
-                id='password'
-                label='นาสกุลจริง'
-              />
-              <TextField
-                size='small'
-                type='phone'
-                id='phone'
-                label='เบอร์โทรศัพท์'
-                placeholder='0987654321'
-              />
-              <TextField
-                size='small'
-                required
-                type='email'
-                id='email'
-                label='อีเมลสถานศึกษา'
-                placeholder='example@email.com'
-              />
-              <FormControl size='small'>
-                <InputLabel id='select-prefix-list'>แผนกวิชา</InputLabel>
-                <Select
-                  labelId='select-prefix-list'
-                  id='select-prefix'
-                  value={''}
-                  label='คำนำหน้า'
-                  onChange={preFixChange}
-                >
-                  <MenuItem value={NamePrefix.MR}>นาย</MenuItem>
-                  <MenuItem value={NamePrefix.MS}>นาง</MenuItem>
-                </Select>
-              </FormControl>
-              <FormControl size='small'>
-                <InputLabel id='select-prefix-list'>สาขาวิชา</InputLabel>
-                <Select
-                  labelId='select-prefix-list'
-                  id='select-prefix'
-                  value={''}
-                  label='คำนำหน้า'
-                  onChange={preFixChange}
-                >
-                  <MenuItem value={NamePrefix.MR}>นาย</MenuItem>
-                  <MenuItem value={NamePrefix.MS}>นาง</MenuItem>
-                </Select>
-              </FormControl>
-            </Stack>
+            <RegisterFormComponent isReadOnly={false} />
             <Box
               display={'flex'}
               flexDirection={'column'}

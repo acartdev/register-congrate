@@ -1,3 +1,5 @@
+import { User } from './user.model';
+
 export interface ModalAction {
   title?: string;
   description?: string;
@@ -5,4 +7,9 @@ export interface ModalAction {
   isLink?: boolean;
   onClose: () => void;
   handleClick?: VoidFunction;
+}
+
+export interface FormAction {
+  isReadOnly: boolean;
+  data?: User;
 }
