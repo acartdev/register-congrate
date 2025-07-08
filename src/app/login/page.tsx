@@ -1,6 +1,7 @@
 'use client';
 import BubbleComponent from '@/components/Buble.component';
 import ResetPasswordDialog from '@/components/dialog/Reset-Password-Dialog.compoent';
+import { User } from '@/model/user.model';
 import {
   backgroundLinear,
   buttonBgLinear,
@@ -10,8 +11,19 @@ import { Box, Button, Stack, TextField, Typography } from '@mui/material';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
+import { SubmitHandler, useForm } from 'react-hook-form';
 
 export default function LoginPage() {
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm<User>();
+  const onSubmit: SubmitHandler<User> = (data) => console.log(data);
+  console.log(watch('userID'));
+  console.log(errors);
+
   const [open, onOpen] = useState(false);
   function handleClose() {
     onOpen(false);
@@ -89,6 +101,7 @@ export default function LoginPage() {
             </Typography>
             <Stack paddingX={3}>
               <TextField
+                {...register('userID')}
                 size='small'
                 required
                 type='text'
@@ -119,6 +132,7 @@ export default function LoginPage() {
             </Stack>
             <Box display={'flex'} justifyContent={'center'}>
               <Button
+                onClick={handleSubmit(onSubmit)}
                 sx={{
                   width: '85%',
                   fontSize: 18,
