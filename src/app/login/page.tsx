@@ -22,7 +22,6 @@ export default function LoginPage() {
     formState: { errors },
   } = useForm<LoginForm>({
     resolver: zodResolver(LoginSchemaModel),
-    mode: 'onSubmit',
     defaultValues: {
       userID: '',
       password: '',
@@ -68,7 +67,7 @@ export default function LoginPage() {
             width={160}
             className='logo'
             height={160}
-            quality={100}
+            priority
           />
           <Typography
             color='white'
@@ -118,7 +117,9 @@ export default function LoginPage() {
                 helperText={errors.userID?.message?.toString()}
                 id='username'
                 label='รหัสนักศึกษา / อาจารย์'
-                inputProps={{ inputMode: 'numeric' }}
+                slotProps={{
+                  input: { inputMode: 'numeric' },
+                }}
               />
               <Box height={18}></Box>
               <TextField

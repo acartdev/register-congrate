@@ -2,11 +2,14 @@
 import BubbleComponent from '@/components/Buble.component';
 import CreatePasswordDialog from '@/components/dialog/Create-Password-Dialog.component';
 import RegisterFormComponent from '@/components/Register-Form.component';
+import { NamePrefix, RegisterForm } from '@/model/form.model';
+import { RegisterSchema } from '@/schema/form.schema';
 import {
   backgroundLinear,
   buttonBgLinear,
   seconBackground,
 } from '@/theme/utils';
+import { zodResolver } from '@hookform/resolvers/zod';
 import {
   Box,
   Button,
@@ -19,18 +22,34 @@ import {
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
+import { SubmitHandler, useForm } from 'react-hook-form';
 
 const steps = ['กรอกข้อมูลส่วนตัว', 'สร้างรหัสผ่าน'];
 export default function RegisterPage() {
   const [open, onOpen] = useState(false);
   const [stack, setStack] = useState<number>(0);
+  const formControl = useForm<RegisterForm>({
+    resolver: zodResolver(RegisterSchema),
+    defaultValues: {
+      prefix: NamePrefix.MR,
+      userID: '',
+      password: '',
+      confirmPassword: '',
+      deptID: 1,
+      email: '',
+      firstName: '',
+      lastName: '',
+      phone: '',
+    },
+  });
   function handleClose() {
     onOpen(false);
   }
-  function handleOpen() {
+  const onSubmit: SubmitHandler<RegisterForm> = (data) => {
     onOpen(true);
     setStack(1);
-  }
+    console.log(data);
+  };
 
   return (
     <Box
@@ -72,12 +91,16 @@ export default function RegisterPage() {
               src={'/img/logo.png'}
               alt='logo'
               width={100}
-              className='logo'
               height={100}
+              style={{ filter: 'drop-shadow(1px 4px 2px rgba(0, 0, 0, 0.2))' }}
               quality={100}
             />
           </Box>
           <Stack
+            component={'form'}
+            noValidate
+            method='post'
+            onSubmit={formControl.handleSubmit(onSubmit)}
             marginTop={5}
             spacing={3}
             paddingX={4}
@@ -103,7 +126,10 @@ export default function RegisterPage() {
                 ))}
               </Stepper>
             </Box>
-            <RegisterFormComponent isReadOnly={false} />
+            <RegisterFormComponent
+              formControl={{ ...formControl }}
+              isReadOnly={false}
+            />
             <Box
               display={'flex'}
               flexDirection={'column'}
@@ -120,7 +146,7 @@ export default function RegisterPage() {
                   color: 'white',
                   ...buttonBgLinear,
                 }}
-                onClick={handleOpen}
+                type='submit'
                 variant='contained'
               >
                 สร้างรหัสผ่าน

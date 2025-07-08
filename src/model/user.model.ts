@@ -7,8 +7,7 @@ export interface User {
   lastName: string;
   phone?: string;
   email: string;
-  department: DepartmentModel;
-  password?: string;
+  deptID: number;
   role?: UserRole;
 }
 

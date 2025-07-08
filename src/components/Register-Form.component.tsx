@@ -1,26 +1,28 @@
 'use client';
-import { NamePrefix } from '@/model/form.model';
+import { departmentDefault } from '@/data/department';
+import { NamePrefix, RegisterForm } from '@/model/form.model';
 import { FormAction } from '@/model/unity.model';
 import {
   FormControl,
+  FormHelperText,
   Grid,
   InputLabel,
   MenuItem,
   Select,
-  SelectChangeEvent,
   Stack,
   TextField,
 } from '@mui/material';
-import { useState } from 'react';
 
 export default function RegisterFormComponent({
   data,
   isReadOnly,
-}: FormAction) {
-  const [namePrefix, setNamePrefix] = useState<NamePrefix>(NamePrefix.MR);
-  function preFixChange(event: SelectChangeEvent) {
-    setNamePrefix(event.target.value as NamePrefix);
-  }
+  formControl,
+}: FormAction<RegisterForm>) {
+  const {
+    register,
+    formState: { errors },
+    watch,
+  } = formControl;
   if (data) {
   }
   return (
@@ -28,36 +30,40 @@ export default function RegisterFormComponent({
       <TextField
         size='small'
         slotProps={{
-          input: {
-            readOnly: isReadOnly,
-          },
+          input: { inputMode: 'numeric', readOnly: isReadOnly },
         }}
+        {...register('userID')}
         required
         type='text'
         id='username'
         autoFocus
         placeholder='65309010013'
+        error={!!errors.userID}
+        helperText={errors.userID?.message}
         label='รหัสนักศึกษา / อาจารย์'
       />
-      <Grid container>
-        <Grid size={3}>
-          <FormControl size='small'>
+      <Grid container columnGap={1.5}>
+        <Grid size={3.5} justifySelf={'flex-end'}>
+          <FormControl fullWidth size='small'>
             <InputLabel id='select-prefix-list'>คำนำหน้า</InputLabel>
             <Select
+              {...register('prefix')}
+              value={watch('prefix')}
               labelId='select-prefix-list'
               id='select-prefix'
-              value={namePrefix}
               label='คำนำหน้า'
-              onChange={preFixChange}
               inputProps={{ readOnly: isReadOnly }}
             >
-              <MenuItem value={NamePrefix.MR}>นาย</MenuItem>
-              <MenuItem value={NamePrefix.MS}>นาง</MenuItem>
+              <MenuItem value={NamePrefix.MR}>{NamePrefix.MR}</MenuItem>
+              <MenuItem value={NamePrefix.MS}>{NamePrefix.MS}</MenuItem>
             </Select>
           </FormControl>
         </Grid>
-        <Grid size={9}>
+        <Grid size={8}>
           <TextField
+            {...register('firstName')}
+            error={!!errors.firstName}
+            helperText={errors.firstName?.message}
             slotProps={{
               input: {
                 readOnly: isReadOnly,
@@ -74,6 +80,7 @@ export default function RegisterFormComponent({
       </Grid>
 
       <TextField
+        {...register('lastName')}
         slotProps={{
           input: {
             readOnly: isReadOnly,
@@ -81,23 +88,30 @@ export default function RegisterFormComponent({
         }}
         size='small'
         required
-        type='password'
+        type='text'
         id='password'
         label='นาสกุลจริง'
+        error={!!errors.lastName}
+        helperText={errors.lastName?.message}
       />
       <TextField
+        {...register('phone')}
         slotProps={{
           input: {
+            inputMode: 'numeric',
             readOnly: isReadOnly,
           },
         }}
         size='small'
         type='phone'
         id='phone'
-        label='เบอร์โทรศัพท์'
+        label='เบอร์โทรศัพท์ (ถ้ามี)'
         placeholder='0987654321'
+        error={!!errors.phone}
+        helperText={errors.phone?.message}
       />
       <TextField
+        {...register('email')}
         slotProps={{
           input: {
             readOnly: isReadOnly,
@@ -109,6 +123,8 @@ export default function RegisterFormComponent({
         id='email'
         label='อีเมลสถานศึกษา'
         placeholder='example@email.com'
+        error={!!errors.email}
+        helperText={errors.email?.message}
       />
       <FormControl size='small'>
         <InputLabel id='select-prefix-list'>แผนกวิชา</InputLabel>
@@ -116,27 +132,19 @@ export default function RegisterFormComponent({
           inputProps={{ readOnly: isReadOnly }}
           labelId='select-prefix-list'
           id='select-prefix'
-          value={''}
           label='คำนำหน้า'
-          onChange={preFixChange}
+          {...register('deptID')}
         >
-          <MenuItem value={NamePrefix.MR}>นาย</MenuItem>
-          <MenuItem value={NamePrefix.MS}>นาง</MenuItem>
+          <MenuItem value=''>
+            <em>--- กรุณาเลือก ---</em>
+          </MenuItem>
+          {departmentDefault.map((item, key) => (
+            <MenuItem key={key} value={item.id}>
+              {item.name}
+            </MenuItem>
+          ))}
         </Select>
-      </FormControl>
-      <FormControl size='small'>
-        <InputLabel id='select-prefix-list'>สาขาวิชา</InputLabel>
-        <Select
-          inputProps={{ readOnly: isReadOnly }}
-          labelId='select-prefix-list'
-          id='select-prefix'
-          value={''}
-          label='คำนำหน้า'
-          onChange={preFixChange}
-        >
-          <MenuItem value={NamePrefix.MR}>นาย</MenuItem>
-          <MenuItem value={NamePrefix.MS}>นาง</MenuItem>
-        </Select>
+        {/* <FormHelperText>ID ที่เลือก: {watch('deptID')}</FormHelperText> */}
       </FormControl>
     </Stack>
   );
