@@ -14,7 +14,7 @@ export const metadata: Metadata = {
   description: 'ระบบลงทะเบียนรับปริญญา และซ้อมรับปริญญา',
 };
 export const viewport: Viewport = {
-  width: 'width=device-width',
+  width: 'device-width',
   initialScale: 1,
   maximumScale: 1,
   userScalable: false,
@@ -26,7 +26,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang='en'>
-      <body className={`${kanit.variable}`}>
+      <body className={kanit.variable}>
         <ThemeProvider theme={theme}>{children}</ThemeProvider>
       </body>
     </html>

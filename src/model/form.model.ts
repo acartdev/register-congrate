@@ -4,3 +4,8 @@ export enum NamePrefix {
 }
 
 export const passwordHint = 'รหัสผ่านต้องมีอย่างน้อย 8 ถึง 20 ตัวอักษร';
+
+export interface LoginForm {
+  userID: string;
+  password: string;
+}

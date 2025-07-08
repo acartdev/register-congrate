@@ -1,7 +1,6 @@
 'use client';
 import BubbleComponent from '@/components/Buble.component';
 import ResetPasswordDialog from '@/components/dialog/Reset-Password-Dialog.compoent';
-import { User } from '@/model/user.model';
 import {
   backgroundLinear,
   buttonBgLinear,
@@ -12,23 +11,24 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { LoginForm } from '@/model/form.model';
+import { LoginSchemaModel } from '@/schema/form.schema';
 
 export default function LoginPage() {
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors },
-  } = useForm<User>({
+  } = useForm<LoginForm>({
+    resolver: zodResolver(LoginSchemaModel),
     mode: 'onSubmit',
     defaultValues: {
       userID: '',
       password: '',
     },
   });
-  const onSubmit: SubmitHandler<User> = (data) => console.log('data' + data);
-  console.log(watch('userID'));
-  console.log(errors);
+  const onSubmit: SubmitHandler<LoginForm> = (data) => console.log(data);
 
   const [open, onOpen] = useState(false);
   function handleClose() {
@@ -110,22 +110,19 @@ export default function LoginPage() {
             </Typography>
             <Stack paddingX={3}>
               <TextField
-                {...register('userID', {
-                  required: 'Email is required',
-                })}
+                {...register('userID')}
                 size='small'
                 required
-                type='text'
+                type='number'
                 error={!!errors.userID}
                 helperText={errors.userID?.message?.toString()}
                 id='username'
                 label='รหัสนักศึกษา / อาจารย์'
+                inputProps={{ inputMode: 'numeric' }}
               />
               <Box height={18}></Box>
               <TextField
-                {...register('password', {
-                  required: 'Passwprd is required',
-                })}
+                {...register('password')}
                 size='small'
                 required
                 type='password'

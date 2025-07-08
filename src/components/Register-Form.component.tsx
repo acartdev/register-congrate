@@ -1,3 +1,4 @@
+'use client';
 import { NamePrefix } from '@/model/form.model';
 import { FormAction } from '@/model/unity.model';
 import {
@@ -55,7 +56,7 @@ export default function RegisterFormComponent({
             </Select>
           </FormControl>
         </Grid>
-        <Grid size={'auto'}>
+        <Grid size={9}>
           <TextField
             slotProps={{
               input: {
@@ -63,8 +64,9 @@ export default function RegisterFormComponent({
               },
             }}
             size='small'
+            fullWidth
             required
-            type='password'
+            type='text'
             id='name'
             label='ชื่อจริง'
           />
