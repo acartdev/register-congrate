@@ -19,8 +19,14 @@ export default function LoginPage() {
     handleSubmit,
     watch,
     formState: { errors },
-  } = useForm<User>();
-  const onSubmit: SubmitHandler<User> = (data) => console.log(data);
+  } = useForm<User>({
+    mode: 'onSubmit',
+    defaultValues: {
+      userID: '',
+      password: '',
+    },
+  });
+  const onSubmit: SubmitHandler<User> = (data) => console.log('data' + data);
   console.log(watch('userID'));
   console.log(errors);
 
@@ -33,6 +39,9 @@ export default function LoginPage() {
   }
   return (
     <Box
+      component={'form'}
+      noValidate
+      onSubmit={handleSubmit(onSubmit)}
       minHeight={'100vh'}
       height={'100vh'}
       width={'100%'}
@@ -101,20 +110,29 @@ export default function LoginPage() {
             </Typography>
             <Stack paddingX={3}>
               <TextField
-                {...register('userID')}
+                {...register('userID', {
+                  required: 'Email is required',
+                })}
                 size='small'
                 required
                 type='text'
+                error={!!errors.userID}
+                helperText={errors.userID?.message?.toString()}
                 id='username'
                 label='รหัสนักศึกษา / อาจารย์'
               />
               <Box height={18}></Box>
               <TextField
+                {...register('password', {
+                  required: 'Passwprd is required',
+                })}
                 size='small'
                 required
                 type='password'
                 id='password'
                 label='รหัสผ่าน'
+                error={!!errors.password}
+                helperText={errors.password?.message?.toString()}
               />
               <Button
                 sx={{
@@ -130,9 +148,10 @@ export default function LoginPage() {
                 หากลืมรหัสผ่าน?
               </Button>
             </Stack>
+
             <Box display={'flex'} justifyContent={'center'}>
               <Button
-                onClick={handleSubmit(onSubmit)}
+                type='submit'
                 sx={{
                   width: '85%',
                   fontSize: 18,
