@@ -36,7 +36,7 @@ export default function MenuDrawer({ open, onClose }: ModalAction) {
               <ListItemIcon sx={{ minWidth: 0, marginRight: 1 }}>
                 {<item.Icon color='secondary' />}
               </ListItemIcon>
-              <ListItemText primary={item.name} />
+              <ListItemText secondary={item.name} />
             </Button>
           </ListItem>
         ))}

@@ -1,5 +1,5 @@
 import { MenuModel } from '@/model/unity.model';
-import { Permission, User } from '@/model/user.model';
+import { Permission } from '@/model/user.model';
 import PersonIcon from '@mui/icons-material/Person';
 import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
 import QrCodeScannerIcon from '@mui/icons-material/QrCodeScanner';
@@ -7,7 +7,6 @@ import PeopleIcon from '@mui/icons-material/People';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import ManageHistoryIcon from '@mui/icons-material/ManageHistory';
 import Person3Icon from '@mui/icons-material/Person3';
-import { NamePrefix } from '@/model/form.model';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 export const menuTab: MenuModel = {
   [Permission.ADMIN]: [
@@ -15,7 +14,7 @@ export const menuTab: MenuModel = {
     { id: 2, name: 'รายการลงทะเบียน', Icon: ReceiptLongIcon, path: '/list' },
     {
       id: 3,
-      name: 'รายชื่อผู้ดูแล',
+      name: 'รายชื่อผู้ดูแลระบบ',
       Icon: AdminPanelSettingsIcon,
       path: '/admin-list',
     },

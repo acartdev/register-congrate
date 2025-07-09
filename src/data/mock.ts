@@ -1,6 +1,6 @@
 import { NamePrefix } from '@/model/form.model';
-import { ListModel } from '@/model/list.model';
-import { User } from '@/model/user.model';
+import { ListModel, CURD, LogModel } from '@/model/list.model';
+import { User, UserRole } from '@/model/user.model';
 
 export const listMock: ListModel[] = [
   {
@@ -109,5 +109,65 @@ export const mockUsers: User[] = [
     created_at: new Date(),
     updated_at: new Date(),
     department: 'เทคโนโลยีสารสนเทศ',
+  },
+];
+
+export const mockLog: LogModel[] = [
+  {
+    id: 1,
+    type: CURD.CREATE,
+    message: 'สร้างผู้ใช้',
+    userID: '65309010013',
+    user: {
+      prefix: NamePrefix.MR,
+      deptID: 1,
+      firstName: 'ธนภัทร',
+      lastName: 'กองเงิน',
+      userID: '65309010013',
+      email: 'example@email.com',
+      created_at: new Date(),
+      updated_at: new Date(),
+      department: 'เทคโนโลยีสารสนเทศ',
+      role: UserRole.STUDENT,
+    },
+    created_at: new Date(),
+  },
+  {
+    id: 2,
+    type: CURD.UPDATE,
+    message: 'แก้ไขผู้ใช้',
+    userID: '65309010013',
+    user: {
+      prefix: NamePrefix.MR,
+      deptID: 1,
+      firstName: 'ธนภัทร',
+      lastName: 'กองเงิน',
+      userID: '65309010013',
+      email: 'example@email.com',
+      created_at: new Date(),
+      updated_at: new Date(),
+      department: 'เทคโนโลยีสารสนเทศ',
+      role: UserRole.STUDENT,
+    },
+    created_at: new Date(),
+  },
+  {
+    id: 3,
+    type: CURD.DELETE,
+    message: 'ลบผู้ใช้',
+    userID: '65309010013',
+    user: {
+      prefix: NamePrefix.MR,
+      deptID: 1,
+      firstName: 'อาร์ต',
+      lastName: 'กองเงิน',
+      userID: '65309010013',
+      email: 'example@email.com',
+      created_at: new Date(),
+      updated_at: new Date(),
+      role: UserRole.ADMIN,
+      department: 'เทคโนโลยีสารสนเทศ',
+    },
+    created_at: new Date(),
   },
 ];

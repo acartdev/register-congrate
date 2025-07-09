@@ -1,7 +1,7 @@
 'use client';
 import TableListComponent from '@/components/TableList.component';
 import { mockUsers } from '@/data/mock';
-import { formatDate } from '@/helper/table.helper';
+import { shortDepartMent } from '@/helper/table.helper';
 import { TableHeadModel } from '@/model/form.model';
 import {
   Box,
@@ -17,7 +17,8 @@ import {
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import { useState } from 'react';
 import SearchComponent from '@/components/Search.component';
-export default function AdminListPage() {
+import DepartMentSearchComponent from '@/components/Department-Search.component';
+export default function StudentListPage() {
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement>();
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -31,16 +32,19 @@ export default function AdminListPage() {
       value: '#',
     },
     { value: 'ชื่อ-นามสกุล', align: 'center' },
-    { value: 'สมัครเมื่อ', align: 'center' },
+    { value: 'แผนก', align: 'center' },
     { value: 'จัดการ' },
   ];
   return (
     <Box>
-      <Typography fontSize={18}>รายชื่อผู้ดูแลระบบ</Typography>
+      <Typography fontSize={18}>รายชื่อนักศึกษา</Typography>
       <Divider sx={{ marginBottom: 2 }} />
-      <Grid container marginBottom={1} justifyContent={'end'}>
+      <Grid container columnGap={1} marginBottom={1} justifyContent={'end'}>
         <Grid size={8}>
           <SearchComponent placholder='ค้นหาชื่อหรือรหัส' />
+        </Grid>
+        <Grid size={12}>
+          <DepartMentSearchComponent />
         </Grid>
       </Grid>
       <TableListComponent heads={headers}>
@@ -73,7 +77,7 @@ export default function AdminListPage() {
             </TableCell>
             <TableCell style={{ padding: '5px 9px' }} align='center'>
               <Typography fontSize={12}>
-                {formatDate(list?.created_at)}
+                {shortDepartMent(list?.department)}
               </Typography>
             </TableCell>
             <TableCell style={{ padding: '5px 9px' }} align='right'>

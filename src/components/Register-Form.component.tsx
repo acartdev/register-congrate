@@ -53,7 +53,11 @@ export default function RegisterFormComponent({
               id='select-prefix'
               defaultValue={NamePrefix.MR}
               label='คำนำหน้า'
-              inputProps={{ readOnly: isReadOnly }}
+              slotProps={{
+                input: {
+                  readOnly: isReadOnly,
+                },
+              }}
             >
               <MenuItem value={NamePrefix.MR}>{NamePrefix.MR}</MenuItem>
               <MenuItem value={NamePrefix.MS}>{NamePrefix.MS}</MenuItem>
@@ -132,11 +136,15 @@ export default function RegisterFormComponent({
       <FormControl size='small'>
         <InputLabel id='select-prefix-list'>แผนกวิชา</InputLabel>
         <Select
-          inputProps={{ readOnly: isReadOnly }}
+          slotProps={{
+            input: {
+              readOnly: isReadOnly,
+            },
+          }}
           labelId='select-prefix-list'
           id='select-prefix'
           defaultValue={1}
-          label='คำนำหน้า'
+          label='แผนกวิชา'
           {...register('deptID')}
         >
           {departmentDefault.map((item, key) => (

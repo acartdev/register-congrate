@@ -40,3 +40,7 @@ export interface TableHeadModel {
   value: string;
   align?: 'center' | 'right' | 'left' | 'inherit' | 'justify';
 }
+
+export interface SearchProps {
+  placholder: string;
+}
