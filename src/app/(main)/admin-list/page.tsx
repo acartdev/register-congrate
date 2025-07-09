@@ -5,6 +5,7 @@ import { formatDate } from '@/helper/table.helper';
 import { TableHeadModel } from '@/model/form.model';
 import {
   Box,
+  Button,
   Divider,
   Grid,
   IconButton,
@@ -15,8 +16,11 @@ import {
   Typography,
 } from '@mui/material';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { useState } from 'react';
 import SearchComponent from '@/components/Search.component';
+import { buttonBgLinear } from '@/theme/utils';
+import Link from 'next/link';
 export default function AdminListPage() {
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement>();
   const open = Boolean(anchorEl);
@@ -38,7 +42,30 @@ export default function AdminListPage() {
     <Box>
       <Typography fontSize={18}>รายชื่อผู้ดูแลระบบ</Typography>
       <Divider sx={{ marginBottom: 2 }} />
-      <Grid container marginBottom={1} justifyContent={'end'}>
+      <Grid
+        container
+        columnGap={1}
+        marginBottom={1}
+        justifyContent={'space-between'}
+      >
+        <Grid alignSelf={'center'} size={'auto'}>
+          <Button
+            LinkComponent={Link}
+            href='/edit-user'
+            sx={{
+              width: '100%',
+              fontSize: 13,
+              fontWeight: '600',
+              letterSpacing: 1.3,
+              color: 'white',
+              ...buttonBgLinear,
+            }}
+            variant='contained'
+            endIcon={<AddCircleIcon />}
+          >
+            เพิ่มข้อมูล
+          </Button>
+        </Grid>
         <Grid size={8}>
           <SearchComponent placholder='ค้นหาชื่อหรือรหัส' />
         </Grid>

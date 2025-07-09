@@ -5,6 +5,7 @@ import { shortDepartMent } from '@/helper/table.helper';
 import { TableHeadModel } from '@/model/form.model';
 import {
   Box,
+  Button,
   Divider,
   Grid,
   IconButton,
@@ -16,8 +17,11 @@ import {
 } from '@mui/material';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import { useState } from 'react';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
 import DepartMentSearchComponent from '@/components/Department-Search.component';
 import SearchComponent from '@/components/Search.component';
+import Link from 'next/link';
+import { buttonBgLinear } from '@/theme/utils';
 export default function TeacherListPage() {
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement>();
   const open = Boolean(anchorEl);
@@ -39,9 +43,32 @@ export default function TeacherListPage() {
     <Box>
       <Typography fontSize={18}>รายชื่ออาจารย์</Typography>
       <Divider sx={{ marginBottom: 2 }} />
-      <Grid container columnGap={1} marginBottom={1} justifyContent={'end'}>
+      <Grid
+        container
+        columnGap={1}
+        marginBottom={1}
+        justifyContent={'space-between'}
+      >
         <Grid size={8}>
           <SearchComponent placholder='ค้นหาชื่อหรือรหัส' />
+        </Grid>
+        <Grid alignSelf={'center'} size={'auto'}>
+          <Button
+            LinkComponent={Link}
+            href='/edit-user'
+            sx={{
+              width: '100%',
+              fontSize: 13,
+              fontWeight: '600',
+              letterSpacing: 1.3,
+              color: 'white',
+              ...buttonBgLinear,
+            }}
+            variant='contained'
+            endIcon={<AddCircleIcon />}
+          >
+            เพิ่มข้อมูล
+          </Button>
         </Grid>
         <Grid size={12}>
           <DepartMentSearchComponent />
@@ -94,7 +121,9 @@ export default function TeacherListPage() {
         open={open}
         onClose={handleClose}
       >
-        <MenuItem onClick={handleClose}>แก้ไข</MenuItem>
+        <MenuItem>
+          <Link href={`/edit-user`}></Link>
+        </MenuItem>
         <MenuItem onClick={handleClose}>จัดการสิทธิ์</MenuItem>
         <MenuItem onClick={handleClose}>ลบ</MenuItem>
       </Menu>

@@ -17,7 +17,7 @@ export default function MainLayout({
     <>
       <NavbarComponent openMenu={setOpen} />
       <Box height={18}></Box>
-      <Container>{children}</Container>
+      <Container aria-hidden={false}>{children}</Container>
       <MenuDrawer open={open} onClose={handleClose} />
     </>
   );

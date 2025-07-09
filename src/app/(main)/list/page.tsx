@@ -1,32 +1,59 @@
 import SearchComponent from '@/components/Search.component';
 import TableListComponent from '@/components/TableList.component';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { listMock } from '@/data/mock';
 import { formatDate } from '@/helper/table.helper';
 import { TableHeadModel } from '@/model/form.model';
+import { buttonBgLinear } from '@/theme/utils';
 import {
   Box,
   Button,
   Divider,
   Grid,
+  IconButton,
+  Link,
   TableCell,
   TableRow,
   Typography,
 } from '@mui/material';
-
+import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 export default function ListRegisterPage() {
   const headers: TableHeadModel[] = [
     {
       value: '#',
     },
     { value: 'ชื่อรายการ', align: 'center' },
-    { value: 'สร้างเมื่อ' },
+    { value: 'วันที่' },
     { value: 'ไฟล์แนบ' },
   ];
   return (
     <Box>
       <Typography fontSize={18}>รายการลงงทะเบียน</Typography>
       <Divider sx={{ marginBottom: 2 }} />
-      <Grid container marginBottom={1} justifyContent={'end'}>
+      <Grid
+        container
+        columnGap={1}
+        marginBottom={1}
+        justifyContent={'space-between'}
+      >
+        <Grid alignSelf={'center'} size={'auto'}>
+          <Button
+            LinkComponent={Link}
+            href='/edit-user'
+            sx={{
+              width: '100%',
+              fontSize: 13,
+              fontWeight: '600',
+              letterSpacing: 1.3,
+              color: 'white',
+              ...buttonBgLinear,
+            }}
+            variant='contained'
+            endIcon={<AddCircleIcon />}
+          >
+            เพิ่มข้อมูล
+          </Button>
+        </Grid>
         <Grid size={8}>
           <SearchComponent placholder='ค้นหาชื่อรายการ' />
         </Grid>
@@ -45,7 +72,7 @@ export default function ListRegisterPage() {
             >
               {key + 1}
             </TableCell>
-            <TableCell style={{ padding: '5px 9px' }} align='left'>
+            <TableCell width={180} style={{ padding: '5px 9px' }} align='left'>
               <Typography flexWrap={'wrap'} fontSize={12}>
                 {list.name}
               </Typography>
@@ -56,14 +83,9 @@ export default function ListRegisterPage() {
               </Typography>
             </TableCell>
             <TableCell style={{ padding: '5px 9px' }} align='right'>
-              <Button
-                size='small'
-                sx={{ textDecoration: 'underline' }}
-                color='info'
-                variant='text'
-              >
-                เปิดไฟล์
-              </Button>
+              <IconButton color='info'>
+                <InsertDriveFileIcon />
+              </IconButton>
             </TableCell>
           </TableRow>
         ))}

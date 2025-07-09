@@ -5,12 +5,13 @@ import {
   UseFormRegister,
   UseFormWatch,
 } from 'react-hook-form';
-import { User } from './user.model';
 import { OverridableComponent } from '@mui/material/OverridableComponent';
 import { AlertColor, SvgIconTypeMap } from '@mui/material';
+import { User } from './user.model';
 
 export interface ModalAction {
   title?: string;
+  user?: User;
   description?: string;
   open: boolean;
   status?: AlertColor;
@@ -21,7 +22,6 @@ export interface ModalAction {
 
 export interface FormAction<T extends FieldValues> {
   isReadOnly: boolean;
-  data?: User;
   formControl: {
     register: UseFormRegister<T>;
     formState: FormState<T>;
@@ -47,4 +47,10 @@ export interface MenuListModel {
     muiName: string;
   };
   path: string;
+}
+export interface MenuManageProps {
+  anchorEl: HTMLButtonElement | undefined;
+  open: boolean;
+  handleClose: () => void;
+  user: User;
 }

@@ -13,7 +13,6 @@ import {
 } from '@mui/material';
 
 export default function RegisterFormComponent({
-  data,
   isReadOnly,
   formControl,
 }: FormAction<RegisterForm>) {
@@ -21,8 +20,7 @@ export default function RegisterFormComponent({
     register,
     formState: { errors },
   } = formControl;
-  if (data) {
-  }
+
   return (
     <Stack paddingX={3} spacing={2}>
       <TextField

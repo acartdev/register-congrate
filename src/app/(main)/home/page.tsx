@@ -137,7 +137,6 @@ export default function Homepage() {
           </Backdrop>
         ) : (
           <RegisterFormComponent
-            data={mockUser}
             isReadOnly={isEdit === false}
             formControl={formControl}
           />

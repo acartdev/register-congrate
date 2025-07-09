@@ -1,27 +1,36 @@
 'use client';
 import TableListComponent from '@/components/TableList.component';
-import { mockUsers } from '@/data/mock';
+import { mockUser, mockUsers } from '@/data/mock';
 import { shortDepartMent } from '@/helper/table.helper';
 import { TableHeadModel } from '@/model/form.model';
 import {
   Box,
+  Button,
   Divider,
   Grid,
   IconButton,
-  Menu,
-  MenuItem,
+  Link,
   TableCell,
   TableRow,
   Typography,
 } from '@mui/material';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { useState } from 'react';
 import SearchComponent from '@/components/Search.component';
 import DepartMentSearchComponent from '@/components/Department-Search.component';
+import MenuManageComponent from '@/components/MenuManage.component';
+import { User } from '@/model/user.model';
+import { buttonBgLinear } from '@/theme/utils';
 export default function StudentListPage() {
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement>();
+  const [selected, setSelected] = useState<User>(mockUser);
   const open = Boolean(anchorEl);
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const handleClick = (
+    event: React.MouseEvent<HTMLButtonElement>,
+    user: User,
+  ) => {
+    setSelected(user);
     setAnchorEl(event.currentTarget);
   };
   const handleClose = () => {
@@ -39,9 +48,32 @@ export default function StudentListPage() {
     <Box>
       <Typography fontSize={18}>รายชื่อนักศึกษา</Typography>
       <Divider sx={{ marginBottom: 2 }} />
-      <Grid container columnGap={1} marginBottom={1} justifyContent={'end'}>
+      <Grid
+        container
+        columnGap={1}
+        marginBottom={1}
+        justifyContent={'space-between'}
+      >
         <Grid size={8}>
           <SearchComponent placholder='ค้นหาชื่อหรือรหัส' />
+        </Grid>
+        <Grid alignSelf={'center'} size={'auto'}>
+          <Button
+            LinkComponent={Link}
+            href='/edit-user'
+            sx={{
+              width: '100%',
+              fontSize: 13,
+              fontWeight: '600',
+              letterSpacing: 1.3,
+              color: 'white',
+              ...buttonBgLinear,
+            }}
+            variant='contained'
+            endIcon={<AddCircleIcon />}
+          >
+            เพิ่มข้อมูล
+          </Button>
         </Grid>
         <Grid size={12}>
           <DepartMentSearchComponent />
@@ -81,23 +113,19 @@ export default function StudentListPage() {
               </Typography>
             </TableCell>
             <TableCell style={{ padding: '5px 9px' }} align='right'>
-              <IconButton onClick={handleClick}>
+              <IconButton onClick={(event) => handleClick(event, list)}>
                 <MoreHorizIcon />
               </IconButton>
             </TableCell>
           </TableRow>
         ))}
       </TableListComponent>
-      <Menu
-        id='basic-menu'
-        anchorEl={anchorEl}
+      <MenuManageComponent
         open={open}
-        onClose={handleClose}
-      >
-        <MenuItem onClick={handleClose}>แก้ไข</MenuItem>
-        <MenuItem onClick={handleClose}>จัดการสิทธิ์</MenuItem>
-        <MenuItem onClick={handleClose}>ลบ</MenuItem>
-      </Menu>
+        anchorEl={anchorEl}
+        handleClose={handleClose}
+        user={selected}
+      />
     </Box>
   );
 }

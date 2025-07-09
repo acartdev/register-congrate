@@ -9,7 +9,6 @@ import {
   tableCellClasses,
   TableContainer,
   TableHead,
-  TablePagination,
   TableRow,
 } from '@mui/material';
 import React from 'react';
@@ -30,7 +29,7 @@ export default function TableListComponent({
   return (
     <>
       <TableContainer component={Paper} sx={{ maxHeight: 500, minHeight: 300 }}>
-        <Table sx={{ minWidth: '100%' }} aria-label='simple table'>
+        <Table aria-label='simple table'>
           <TableHead>
             <TableRow>
               {heads.map((head, key) => (
@@ -48,15 +47,6 @@ export default function TableListComponent({
           <TableBody>{children}</TableBody>
         </Table>
       </TableContainer>
-      <TablePagination
-        sx={{ padding: 0 }}
-        component='div'
-        count={100}
-        page={1}
-        onPageChange={() => {}}
-        rowsPerPage={5}
-        onRowsPerPageChange={() => {}}
-      />
     </>
   );
 }

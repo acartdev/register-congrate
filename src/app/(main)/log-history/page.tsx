@@ -8,6 +8,7 @@ import {
   Button,
   Divider,
   Grid,
+  Pagination,
   TableCell,
   TableRow,
   Typography,
@@ -68,6 +69,9 @@ export default function LogHistoryPage() {
           </TableRow>
         ))}
       </TableListComponent>
+      {/* <Box marginTop={2} width={'100%'} display={'flex'} justifyContent={'end'}>
+        <Pagination count={5} />
+      </Box> */}
     </Box>
   );
 }
