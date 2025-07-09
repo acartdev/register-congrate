@@ -23,18 +23,25 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
-
+import isEmpty from 'lodash/isEmpty';
 const steps = ['กรอกข้อมูลส่วนตัว', 'สร้างรหัสผ่าน'];
 export default function RegisterPage() {
   const [open, onOpen] = useState(false);
   const [stack, setStack] = useState<number>(0);
+  const [register, setRegister] = useState<RegisterForm>({
+    prefix: NamePrefix.MR,
+    userID: '',
+    deptID: 1,
+    email: '',
+    firstName: '',
+    lastName: '',
+    phone: '',
+  });
   const formControl = useForm<RegisterForm>({
     resolver: zodResolver(RegisterSchema),
     defaultValues: {
       prefix: NamePrefix.MR,
       userID: '',
-      password: '',
-      confirmPassword: '',
       deptID: 1,
       email: '',
       firstName: '',
@@ -42,13 +49,19 @@ export default function RegisterPage() {
       phone: '',
     },
   });
+  const {
+    handleSubmit,
+    formState: { errors },
+  } = formControl;
   function handleClose() {
     onOpen(false);
   }
+
   const onSubmit: SubmitHandler<RegisterForm> = (data) => {
-    onOpen(true);
+    if (!isEmpty(errors)) return;
     setStack(1);
-    console.log(data);
+    setRegister(data);
+    onOpen(true);
   };
 
   return (
@@ -98,9 +111,8 @@ export default function RegisterPage() {
           </Box>
           <Stack
             component={'form'}
+            onSubmit={handleSubmit(onSubmit)}
             noValidate
-            method='post'
-            onSubmit={formControl.handleSubmit(onSubmit)}
             marginTop={5}
             spacing={3}
             paddingX={4}
@@ -127,7 +139,7 @@ export default function RegisterPage() {
               </Stepper>
             </Box>
             <RegisterFormComponent
-              formControl={{ ...formControl }}
+              formControl={formControl}
               isReadOnly={false}
             />
             <Box
@@ -170,7 +182,11 @@ export default function RegisterPage() {
           </Stack>
         </Box>
       </Stack>
-      <CreatePasswordDialog open={open} onClose={handleClose} />
+      <CreatePasswordDialog
+        formData={register}
+        open={open}
+        onClose={handleClose}
+      />
     </Box>
   );
 }

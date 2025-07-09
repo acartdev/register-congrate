@@ -14,6 +14,7 @@ const eslintConfig = [
     extends:['next/core-web-vitals', 'next/typescript','prettier'],
     plugins:['prettier'],
     rules:{
+     '@typescript-eslint/no-unused-vars': 'warn',
       'quotes': ['error', 'single', { 'avoidEscape': true, 'allowTemplateLiterals': true }],
       'jsx-quotes': ['error', 'prefer-single']
     }

@@ -13,3 +13,17 @@ export const buttonBgLinear: SxProps<Theme> = {
   textShadow: '0 0px 8px 0px rgba(0,0,0,0.3)',
   background: `linear-gradient(to left, #6FD195 0%, #55C4AE 100%)`,
 };
+
+export const backgroundMenuLinear: SxProps<Theme> = {
+  background: `linear-gradient(to top, ${green.A700} 0%, ${green.A200} 10%, #ffffff 50%)`,
+};
+
+export const navbarSyle: SxProps<Theme> = {
+  width: '100%',
+  height: '60px',
+  display: 'flex',
+  justifyContent: 'space-between',
+  padding: '0 0.8em',
+  alignItems: 'center',
+  boxShadow: '0 4px 8px 0px rgba(0,0,0,0.3)',
+};

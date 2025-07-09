@@ -11,16 +11,31 @@ import Link from 'next/link';
 import SuccessDialog from './Success-Dialog.component';
 import { ModalAction } from '@/model/unity.model';
 import { useState } from 'react';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { EmailSchema } from '@/schema/form.schema';
 
 export default function ResetPasswordDialog({ open, onClose }: ModalAction) {
   const [openSuccess, onOpenSuccess] = useState(false);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<{ email: string }>({
+    resolver: zodResolver(EmailSchema),
+    defaultValues: {
+      email: '',
+    },
+  });
+
+  const onSubmit: SubmitHandler<{ email: string }> = (data) => {
+    onOpenSuccess(true);
+  };
   function handleCloseSuccess() {
     onOpenSuccess(false);
     onClose();
   }
-  function handleOpen() {
-    onOpenSuccess(true);
-  }
+
   return (
     <>
       <Drawer
@@ -45,17 +60,27 @@ export default function ResetPasswordDialog({ open, onClose }: ModalAction) {
             >
               กู้คืนรหัสผ่าน
             </Typography>
-            <Stack paddingX={2} spacing={3}>
+            <Stack
+              component={'form'}
+              noValidate
+              onSubmit={handleSubmit(onSubmit)}
+              paddingX={2}
+              spacing={3}
+            >
               <TextField
                 size='small'
                 required
                 type='email'
                 id='email'
+                placeholder='example@email.com'
                 label='อีเมล'
+                {...register('email')}
+                error={!!errors.email}
+                helperText={errors?.email?.message}
               />
               <Box display={'flex'} justifyContent={'center'}>
                 <Button
-                  onClick={handleOpen}
+                  type='submit'
                   sx={{
                     width: '100%',
                     fontSize: 18,

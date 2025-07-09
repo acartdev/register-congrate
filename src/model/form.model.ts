@@ -17,12 +17,14 @@ export interface RegisterForm {
   prefix: NamePrefix;
   firstName: string;
   lastName: string;
-  password: string;
   email: string;
-
-  confirmPassword: string;
   deptID: number;
-  phone: string;
+  phone?: string;
+}
+
+export interface PasswordForm {
+  password: string;
+  confirmPassword: string;
 }
 
 export interface RegisterFormProps {

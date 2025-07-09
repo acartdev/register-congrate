@@ -112,13 +112,16 @@ export default function LoginPage() {
                 {...register('userID')}
                 size='small'
                 required
-                type='number'
+                type='text'
                 error={!!errors.userID}
                 helperText={errors.userID?.message?.toString()}
                 id='username'
                 label='รหัสนักศึกษา / อาจารย์'
                 slotProps={{
                   input: { inputMode: 'numeric' },
+                  htmlInput: {
+                    inputMode: 'numeric',
+                  },
                 }}
               />
               <Box height={18}></Box>

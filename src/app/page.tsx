@@ -1,4 +1,4 @@
-import RegisterFormComponent from '@/components/Register-Form.component';
+// import RegisterFormComponent from '@/components/Register-Form.component';
 // import { NamePrefix } from '@/model/form.model';
 // import { User } from '@/model/user.model';
 import { Box } from '@mui/material';
@@ -14,9 +14,5 @@ import { Box } from '@mui/material';
 //   phone: '0910768304',
 // };
 export default function Home() {
-  return (
-    <Box>
-      <RegisterFormComponent isReadOnly={true} />
-    </Box>
-  );
+  return <Box>{/* <RegisterFormComponent isReadOnly={true} /> */}</Box>;
 }

@@ -1,17 +1,19 @@
-import { passwordHint } from '@/model/form.model';
+import { PasswordForm, passwordHint } from '@/model/form.model';
 import { buttonBgLinear } from '@/theme/utils';
 import { Box, Button, Stack, TextField, Typography } from '@mui/material';
 import SuccessDialog from './dialog/Success-Dialog.component';
-import { useState } from 'react';
+import { FormControlHook, ModalAction } from '@/model/unity.model';
 
-export default function CreatePasswordComponent() {
-  const [open, onOpen] = useState(false);
-  function handleClose() {
-    onOpen(false);
-  }
-  function handleOpen() {
-    onOpen(true);
-  }
+export default function CreatePasswordComponent({
+  open,
+  onClose,
+  handleClick,
+  formControl,
+}: ModalAction & { formControl: FormControlHook<PasswordForm> }) {
+  const {
+    register,
+    formState: { errors },
+  } = formControl;
   return (
     <>
       <Stack spacing={4}>
@@ -26,25 +28,32 @@ export default function CreatePasswordComponent() {
         </Typography>
         <Stack paddingX={2} spacing={2}>
           <TextField
+            {...register('password')}
             size='small'
             placeholder='*********'
             required
             type='password'
             id='password'
             label='รหัสผ่านใหม่'
-            helperText={passwordHint}
+            error={!!errors.password}
+            helperText={
+              !!errors.password ? errors?.password?.message : passwordHint
+            }
           />
           <TextField
+            {...register('confirmPassword')}
             size='small'
             required
             type='password'
             id='c-password'
             placeholder='*********'
+            error={!!errors.confirmPassword}
+            helperText={errors?.confirmPassword?.message}
             label='ยืนยันรหัสผ่าน'
           />
           <Box display={'flex'} justifyContent={'center'}>
             <Button
-              onClick={handleOpen}
+              onClick={handleClick}
               sx={{
                 width: '100%',
                 fontSize: 18,
@@ -63,7 +72,7 @@ export default function CreatePasswordComponent() {
       <SuccessDialog
         title='สมัครสมาชิกสำเร็จ'
         description='กรุณาตรวจสอบอีเมลของท่านที่ใช้สมัครเพื่อยืนยันตัวตนในการสมัครสมาชิก'
-        onClose={handleClose}
+        onClose={onClose}
         open={open}
       />
     </>

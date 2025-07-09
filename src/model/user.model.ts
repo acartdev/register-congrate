@@ -9,6 +9,7 @@ export interface User {
   email: string;
   deptID: number;
   role?: UserRole;
+  permit?: Permission;
 }
 
 export interface DepartmentModel {
@@ -18,6 +19,13 @@ export interface DepartmentModel {
 
 export enum UserRole {
   ADMIN = 'ADMIN',
-  USER = 'USER',
-  STAFF = 'STAFF',
+  STUDENT = 'STUDENT',
+  TEACHER = 'TEACHER',
+}
+
+export enum Permission {
+  ADMIN = 'ADMIN',
+  STAFF_TEACHER = 'STAFF_TEACHER',
+  STAFF_STUDENT = 'STAFF_STUDENT',
+  VIEW = 'VIEW',
 }
