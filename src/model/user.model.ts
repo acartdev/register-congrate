@@ -10,6 +10,9 @@ export interface User {
   deptID: number;
   role?: UserRole;
   permit?: Permission;
+  created_at: Date | string;
+  updated_at: Date | string;
+  department?: string;
 }
 
 export interface DepartmentModel {

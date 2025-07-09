@@ -98,10 +98,10 @@ export default function RegisterFormComponent({
       <TextField
         {...register('phone')}
         slotProps={{
+          input: {
+            readOnly: isReadOnly,
+          },
           htmlInput: {
-            input: {
-              readOnly: isReadOnly,
-            },
             inputMode: 'numeric',
           },
         }}

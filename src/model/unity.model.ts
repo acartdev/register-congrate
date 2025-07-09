@@ -7,12 +7,13 @@ import {
 } from 'react-hook-form';
 import { User } from './user.model';
 import { OverridableComponent } from '@mui/material/OverridableComponent';
-import { SvgIconTypeMap } from '@mui/material';
+import { AlertColor, SvgIconTypeMap } from '@mui/material';
 
 export interface ModalAction {
   title?: string;
   description?: string;
   open: boolean;
+  status?: AlertColor;
   isLink?: boolean;
   onClose: () => void;
   handleClick?: VoidFunction;
@@ -45,4 +46,5 @@ export interface MenuListModel {
   Icon: OverridableComponent<SvgIconTypeMap<unknown, 'svg'>> & {
     muiName: string;
   };
+  path: string;
 }

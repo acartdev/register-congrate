@@ -1,3 +1,4 @@
+import { ReactNode } from 'react';
 import { UseFormReturn } from 'react-hook-form';
 
 export enum NamePrefix {
@@ -29,4 +30,13 @@ export interface PasswordForm {
 
 export interface RegisterFormProps {
   formControl: UseFormReturn<RegisterForm>;
+}
+
+export interface TableListProps {
+  heads: TableHeadModel[];
+}
+
+export interface TableHeadModel {
+  value: string;
+  align?: 'center' | 'right' | 'left' | 'inherit' | 'justify';
 }

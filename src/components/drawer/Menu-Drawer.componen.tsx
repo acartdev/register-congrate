@@ -1,10 +1,12 @@
 import { menuTab } from '@/data/menu-tab';
+import { mockUser } from '@/data/mock';
 import { NamePrefix } from '@/model/form.model';
 import { ModalAction } from '@/model/unity.model';
 import { Permission, User } from '@/model/user.model';
 import { backgroundMenuLinear } from '@/theme/utils';
 import {
   Box,
+  Button,
   Container,
   Divider,
   Drawer,
@@ -17,25 +19,25 @@ import {
   Typography,
 } from '@mui/material';
 import Image from 'next/image';
-const mockUser: User = {
-  prefix: NamePrefix.MR,
-  deptID: 1,
-  firstName: 'ธนภัทร',
-  lastName: 'กองเงิน',
-  userID: '65309010013',
-  email: 'example@email.com',
-};
+import Link from 'next/link';
+
 export default function MenuDrawer({ open, onClose }: ModalAction) {
   const DrawerList = (
     <Box>
       <List disablePadding>
         {menuTab[Permission.ADMIN].map((item) => (
-          <ListItem key={item.id}>
-            <ListItemIcon sx={{ minWidth: 0, marginRight: 1 }}>
-              {<item.Icon color='secondary' />}
-            </ListItemIcon>
-            <ListItemText primary={item.name} />
-            <Divider />
+          <ListItem key={item.id} onClick={onClose}>
+            <Button
+              size='small'
+              sx={{ padding: 0 }}
+              LinkComponent={Link}
+              href={item.path}
+            >
+              <ListItemIcon sx={{ minWidth: 0, marginRight: 1 }}>
+                {<item.Icon color='secondary' />}
+              </ListItemIcon>
+              <ListItemText primary={item.name} />
+            </Button>
           </ListItem>
         ))}
       </List>
