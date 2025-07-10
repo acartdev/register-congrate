@@ -51,6 +51,6 @@ export interface MenuListModel {
 export interface MenuManageProps {
   anchorEl: HTMLButtonElement | undefined;
   open: boolean;
+  user: User | undefined;
   handleClose: () => void;
-  user: User;
 }

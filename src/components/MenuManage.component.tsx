@@ -28,7 +28,7 @@ export default function MenuManageComponent({
             sx={{ p: 0, fontSize: 16, m: 0 }}
             size='small'
             LinkComponent={Link}
-            href={`/edit-user/${user.userID}`}
+            href={`/edit-user/${user?.userID}`}
           >
             แก้ไข
           </Button>

@@ -1,6 +1,5 @@
 'use client';
 import RegisterFormComponent from '@/components/Register-Form.component';
-import SnackBarComponent from '@/components/Snackbar.component';
 import { NamePrefix, RegisterForm } from '@/model/form.model';
 import { RegisterSchema } from '@/schema/form.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -14,21 +13,15 @@ import {
   Typography,
 } from '@mui/material';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { AlertColor } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { mockUser } from '@/data/mock';
+import { useSnackStore } from '@/_store/snackStore';
 
 export default function Homepage() {
   const [isLoad, setIsload] = useState(true);
-  const [openSnackBar, setOpenSnackBar] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
-  const [snackData, setSnackData] = useState<{
-    title: string;
-    status: AlertColor;
-  }>({
-    title: 'แก้ไขข้อมูลสำเร็จ',
-    status: 'success',
-  });
+  const { onOpenSnack, updateSnackContent } = useSnackStore();
+
   const formControl = useForm<RegisterForm>({
     resolver: zodResolver(RegisterSchema),
     defaultValues: {
@@ -53,7 +46,7 @@ export default function Homepage() {
       setTimeout(() => {
         reset(mockUser);
         setIsload(false);
-      }, 2000);
+      }, 1000);
     }
     if (isSubmitSuccessful) {
       reset(watch(), {
@@ -66,18 +59,18 @@ export default function Homepage() {
 
   const onSubmit: SubmitHandler<RegisterForm> = (data) => {
     if (!isDirty) {
-      setSnackData({
+      updateSnackContent({
         status: 'warning',
         title: 'ข้อมูลยังไม่ถูกแก้ไข กรุณาตรวจสอบ',
       });
-      setOpenSnackBar(true);
+      onOpenSnack();
       return;
     }
-    setSnackData({
+    updateSnackContent({
       title: 'แก้ไขข้อมูลสำเร็จ',
       status: 'success',
     });
-    setOpenSnackBar(true);
+    onOpenSnack();
     setIsEdit(false);
   };
   const onResetForm = () => {
@@ -142,11 +135,6 @@ export default function Homepage() {
           />
         )}
       </Stack>
-      <SnackBarComponent
-        {...snackData}
-        open={openSnackBar}
-        onClose={() => setOpenSnackBar(false)}
-      />
     </Box>
   );
 }

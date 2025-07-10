@@ -36,7 +36,7 @@ export default function ListRegisterPage() {
         marginBottom={1}
         justifyContent={'space-between'}
       >
-        <Grid alignSelf={'center'} size={'auto'}>
+        <Grid alignSelf={'center'} size={'grow'}>
           <Button
             LinkComponent={Link}
             href='/edit-user'
@@ -54,7 +54,7 @@ export default function ListRegisterPage() {
             เพิ่มข้อมูล
           </Button>
         </Grid>
-        <Grid size={8}>
+        <Grid size={7.5}>
           <SearchComponent placholder='ค้นหาชื่อรายการ' />
         </Grid>
       </Grid>

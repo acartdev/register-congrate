@@ -46,13 +46,14 @@ export default function TeacherListPage() {
       <Grid
         container
         columnGap={1}
+        rowGap={1}
         marginBottom={1}
         justifyContent={'space-between'}
       >
         <Grid size={8}>
           <SearchComponent placholder='ค้นหาชื่อหรือรหัส' />
         </Grid>
-        <Grid alignSelf={'center'} size={'auto'}>
+        <Grid alignSelf={'center'} size={'grow'}>
           <Button
             LinkComponent={Link}
             href='/edit-user'

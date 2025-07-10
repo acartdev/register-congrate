@@ -1,11 +1,10 @@
 'use client';
+import { useSnackStore } from '@/_store/snackStore';
 import RegisterFormComponent from '@/components/Register-Form.component';
-import SnackBarComponent from '@/components/Snackbar.component';
-import { mockUser, mockUsers } from '@/data/mock';
+import { mockUsers } from '@/data/mock';
 import { NamePrefix, RegisterForm } from '@/model/form.model';
 import { buttonBgLinear } from '@/theme/utils';
 import {
-  AlertColor,
   Backdrop,
   Box,
   Button,
@@ -25,14 +24,7 @@ export default function EditUserPages({
 }) {
   const router = useRouter();
   const [isLoad, setIsload] = useState(true);
-  const [openSnackBar, setOpenSnackBar] = useState(false);
-  const [snackData, setSnackData] = useState<{
-    title: string;
-    status: AlertColor;
-  }>({
-    title: 'แก้ไขข้อมูลสำเร็จ',
-    status: 'success',
-  });
+  const { onOpenSnack, updateSnackContent } = useSnackStore();
 
   const { slug } = use(params);
   const formControl = useForm<RegisterForm>({
@@ -68,20 +60,21 @@ export default function EditUserPages({
       });
     }
   }, [isSubmitSuccessful, reset]);
-  const onSubmit: SubmitHandler<RegisterForm> = (data) => {
+  const onSubmit: SubmitHandler<RegisterForm> = () => {
     if (!isDirty) {
-      setSnackData({
+      updateSnackContent({
         status: 'warning',
         title: 'ข้อมูลยังไม่ถูกแก้ไข กรุณาตรวจสอบ',
       });
-      setOpenSnackBar(true);
+      onOpenSnack();
       return;
     }
-    setSnackData({
+    updateSnackContent({
       title: 'แก้ไขข้อมูลสำเร็จ',
       status: 'success',
     });
-    setOpenSnackBar(true);
+    onOpenSnack();
+    router.back();
   };
   return (
     <Box>
@@ -142,12 +135,6 @@ export default function EditUserPages({
           </Box>
         </Stack>
       )}
-
-      <SnackBarComponent
-        {...snackData}
-        open={openSnackBar}
-        onClose={() => setOpenSnackBar(false)}
-      />
     </Box>
   );
 }

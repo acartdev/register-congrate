@@ -50,19 +50,21 @@ export default function StudentListPage() {
       <Divider sx={{ marginBottom: 2 }} />
       <Grid
         container
-        columnGap={1}
+        rowGap={1}
         marginBottom={1}
         justifyContent={'space-between'}
+        alignItems={'center'}
+        columnGap={1}
       >
-        <Grid size={8}>
+        <Grid size={7.5}>
           <SearchComponent placholder='ค้นหาชื่อหรือรหัส' />
         </Grid>
-        <Grid alignSelf={'center'} size={'auto'}>
+        <Grid size={'grow'}>
           <Button
+            fullWidth
             LinkComponent={Link}
             href='/edit-user'
             sx={{
-              width: '100%',
               fontSize: 13,
               fontWeight: '600',
               letterSpacing: 1.3,
