@@ -1,6 +1,6 @@
 'use client';
 import TableListComponent from '@/components/TableList.component';
-import { mockUsers } from '@/data/mock';
+import { mockUser, mockUsers } from '@/data/mock';
 import { shortDepartMent } from '@/helper/table.helper';
 import { TableHeadModel } from '@/model/form.model';
 import {
@@ -22,15 +22,23 @@ import DepartMentSearchComponent from '@/components/Department-Search.component'
 import SearchComponent from '@/components/Search.component';
 import Link from 'next/link';
 import { buttonBgLinear } from '@/theme/utils';
+import MenuManageComponent from '@/components/MenuManage.component';
+import { User } from '@/model/user.model';
 export default function TeacherListPage() {
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement>();
+  const [selected, setSelected] = useState<User>(mockUser);
   const open = Boolean(anchorEl);
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const handleClick = (
+    event: React.MouseEvent<HTMLButtonElement>,
+    user: User,
+  ) => {
+    setSelected(user);
     setAnchorEl(event.currentTarget);
   };
   const handleClose = () => {
     setAnchorEl(undefined);
   };
+
   const headers: TableHeadModel[] = [
     {
       value: '#',
@@ -50,7 +58,7 @@ export default function TeacherListPage() {
         marginBottom={1}
         justifyContent={'space-between'}
       >
-        <Grid size={8}>
+        <Grid size={7.5}>
           <SearchComponent placholder='ค้นหาชื่อหรือรหัส' />
         </Grid>
         <Grid alignSelf={'center'} size={'grow'}>
@@ -109,25 +117,19 @@ export default function TeacherListPage() {
               </Typography>
             </TableCell>
             <TableCell style={{ padding: '5px 9px' }} align='right'>
-              <IconButton onClick={handleClick}>
+              <IconButton onClick={(e) => handleClick(e, list)}>
                 <MoreHorizIcon />
               </IconButton>
             </TableCell>
           </TableRow>
         ))}
       </TableListComponent>
-      <Menu
-        id='basic-menu'
-        anchorEl={anchorEl}
+      <MenuManageComponent
         open={open}
-        onClose={handleClose}
-      >
-        <MenuItem>
-          <Link href={`/edit-user`}></Link>
-        </MenuItem>
-        <MenuItem onClick={handleClose}>จัดการสิทธิ์</MenuItem>
-        <MenuItem onClick={handleClose}>ลบ</MenuItem>
-      </Menu>
+        anchorEl={anchorEl}
+        handleClose={handleClose}
+        user={selected}
+      />
     </Box>
   );
 }

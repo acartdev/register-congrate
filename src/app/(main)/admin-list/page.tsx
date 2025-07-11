@@ -1,6 +1,6 @@
 'use client';
 import TableListComponent from '@/components/TableList.component';
-import { mockUsers } from '@/data/mock';
+import { mockUser, mockUsers } from '@/data/mock';
 import { formatDate } from '@/helper/table.helper';
 import { TableHeadModel } from '@/model/form.model';
 import {
@@ -9,8 +9,6 @@ import {
   Divider,
   Grid,
   IconButton,
-  Menu,
-  MenuItem,
   TableCell,
   TableRow,
   Typography,
@@ -21,10 +19,17 @@ import { useState } from 'react';
 import SearchComponent from '@/components/Search.component';
 import { buttonBgLinear } from '@/theme/utils';
 import Link from 'next/link';
+import MenuManageComponent from '@/components/MenuManage.component';
+import { User } from '@/model/user.model';
 export default function AdminListPage() {
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement>();
+  const [selected, setSelected] = useState<User>(mockUser);
   const open = Boolean(anchorEl);
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const handleClick = (
+    event: React.MouseEvent<HTMLButtonElement>,
+    user: User,
+  ) => {
+    setSelected(user);
     setAnchorEl(event.currentTarget);
   };
   const handleClose = () => {
@@ -104,23 +109,19 @@ export default function AdminListPage() {
               </Typography>
             </TableCell>
             <TableCell style={{ padding: '5px 9px' }} align='right'>
-              <IconButton onClick={handleClick}>
+              <IconButton onClick={(e) => handleClick(e, list)}>
                 <MoreHorizIcon />
               </IconButton>
             </TableCell>
           </TableRow>
         ))}
       </TableListComponent>
-      <Menu
-        id='basic-menu'
-        anchorEl={anchorEl}
+      <MenuManageComponent
         open={open}
-        onClose={handleClose}
-      >
-        <MenuItem onClick={handleClose}>แก้ไข</MenuItem>
-        <MenuItem onClick={handleClose}>จัดการสิทธิ์</MenuItem>
-        <MenuItem onClick={handleClose}>ลบ</MenuItem>
-      </Menu>
+        anchorEl={anchorEl}
+        handleClose={handleClose}
+        user={selected}
+      />
     </Box>
   );
 }

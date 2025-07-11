@@ -14,12 +14,13 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { LoginForm } from '@/model/form.model';
 import { LoginSchemaModel } from '@/schema/form.schema';
+import { useRouter } from 'next/navigation';
 
 export default function LoginPage() {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isValid },
   } = useForm<LoginForm>({
     resolver: zodResolver(LoginSchemaModel),
     defaultValues: {
@@ -27,7 +28,13 @@ export default function LoginPage() {
       password: '',
     },
   });
-  const onSubmit: SubmitHandler<LoginForm> = (data) => console.log(data);
+  const router = useRouter();
+  const onSubmit: SubmitHandler<LoginForm> = (data) => {
+    console.log(data);
+    if (isValid) {
+      router.push('/');
+    }
+  };
 
   const [open, onOpen] = useState(false);
   function handleClose() {

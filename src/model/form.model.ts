@@ -1,3 +1,4 @@
+import { QRCodeFormData } from '@/schemas/form.schema';
 import { UseFormReturn } from 'react-hook-form';
 
 export enum NamePrefix {
@@ -10,6 +11,12 @@ export const passwordHint = 'รหัสผ่านต้องมีอย่
 export interface LoginForm {
   userID: string;
   password: string;
+}
+export interface QRCodeData
+  extends Omit<QRCodeFormData, 'startDate' | 'endDate'> {
+  id: string;
+  startDate: string;
+  endDate: string;
 }
 
 export interface RegisterForm {

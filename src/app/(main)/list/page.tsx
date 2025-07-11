@@ -1,3 +1,5 @@
+'use client';
+
 import SearchComponent from '@/components/Search.component';
 import TableListComponent from '@/components/TableList.component';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
@@ -17,7 +19,10 @@ import {
   Typography,
 } from '@mui/material';
 import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
+import { useRouter } from 'next/navigation';
 export default function ListRegisterPage() {
+  const router = useRouter();
+
   const headers: TableHeadModel[] = [
     {
       value: '#',
@@ -26,6 +31,10 @@ export default function ListRegisterPage() {
     { value: 'วันที่' },
     { value: 'ไฟล์แนบ' },
   ];
+
+  const handleRowClick = (id: number) => {
+    router.push(`/qr-code/${id}`);
+  };
   return (
     <Box>
       <Typography fontSize={18}>รายการลงงทะเบียน</Typography>
@@ -39,7 +48,7 @@ export default function ListRegisterPage() {
         <Grid alignSelf={'center'} size={'grow'}>
           <Button
             LinkComponent={Link}
-            href='/edit-user'
+            href='/qr-code/create'
             sx={{
               width: '100%',
               fontSize: 13,
@@ -62,7 +71,12 @@ export default function ListRegisterPage() {
         {listMock.map((list, key) => (
           <TableRow
             key={list.id}
-            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+            sx={{
+              '&:last-child td, &:last-child th': { border: 0 },
+              cursor: 'pointer',
+              '&:hover': { backgroundColor: '#f5f5f5' },
+            }}
+            onClick={() => handleRowClick(list.id)}
           >
             <TableCell
               style={{ padding: '5px 9px' }}

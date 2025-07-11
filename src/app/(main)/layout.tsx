@@ -7,7 +7,8 @@ import NavbarComponent from '@/components/Navbar.component';
 import SnackBarComponent from '@/components/Snackbar.component';
 import { Box, Container } from '@mui/material';
 import { useState } from 'react';
-
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 export default function MainLayout({
   children,
 }: Readonly<{
@@ -22,7 +23,9 @@ export default function MainLayout({
     <>
       <NavbarComponent openMenu={setOpen} />
       <Box height={18}></Box>
-      <Container aria-hidden={false}>{children}</Container>
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <Container aria-hidden={false}>{children}</Container>
+      </LocalizationProvider>
       <MenuDrawer open={open} onClose={handleClose} />
       <SnackBarComponent {...data} open={isSnackOpen} onClose={onCloseSnack} />
     </>
