@@ -171,3 +171,70 @@ export const mockLog: LogModel[] = [
     created_at: new Date(),
   },
 ];
+
+export interface WaitVerifyUser extends User {
+  verificationStatus: 'pending' | 'approved' | 'rejected';
+}
+
+export const waitVerifyMock: WaitVerifyUser[] = [
+  {
+    prefix: NamePrefix.MS,
+    deptID: 1,
+    firstName: 'สมศรี',
+    lastName: 'ใจดี',
+    userID: '65309010025',
+    email: 'somsri.jaidee@student.example.com',
+    created_at: new Date('2025-01-10'),
+    updated_at: new Date('2025-01-10'),
+    department: 'เทคโนโลยีสารสนเทศ',
+    verificationStatus: 'pending',
+  },
+  {
+    prefix: NamePrefix.MR,
+    deptID: 2,
+    firstName: 'กิตติ',
+    lastName: 'วงศ์ใหญ่',
+    userID: '65309020015',
+    email: 'kitti.wongyai@student.example.com',
+    created_at: new Date('2025-01-11'),
+    updated_at: new Date('2025-01-11'),
+    department: 'วิศวกรรมคอมพิวเตอร์',
+    verificationStatus: 'pending',
+  },
+  {
+    prefix: NamePrefix.MS,
+    deptID: 1,
+    firstName: 'นิภา',
+    lastName: 'สุขเจริญ',
+    userID: '65309010030',
+    email: 'nipha.sukcharoen@student.example.com',
+    created_at: new Date('2025-01-12'),
+    updated_at: new Date('2025-01-12'),
+    department: 'เทคโนโลยีสารสนเทศ',
+    verificationStatus: 'approved',
+  },
+  {
+    prefix: NamePrefix.MR,
+    deptID: 3,
+    firstName: 'วิชัย',
+    lastName: 'เก่งการ',
+    userID: '65309030020',
+    email: 'wichai.kengkan@student.example.com',
+    created_at: new Date('2025-01-13'),
+    updated_at: new Date('2025-01-13'),
+    department: 'วิศวกรรมไฟฟ้า',
+    verificationStatus: 'rejected',
+  },
+  {
+    prefix: NamePrefix.MS,
+    deptID: 2,
+    firstName: 'รัตนา',
+    lastName: 'ดีเลิศ',
+    userID: '65309020040',
+    email: 'rattana.deeloet@student.example.com',
+    created_at: new Date('2025-01-13'),
+    updated_at: new Date('2025-01-13'),
+    department: 'วิศวกรรมคอมพิวเตอร์',
+    verificationStatus: 'pending',
+  },
+];

@@ -8,6 +8,7 @@ import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import ManageHistoryIcon from '@mui/icons-material/ManageHistory';
 import Person3Icon from '@mui/icons-material/Person3';
 import DashboardIcon from '@mui/icons-material/Dashboard';
+import HourglassEmptyIcon from '@mui/icons-material/HourglassEmpty';
 export const menuTab: MenuModel = {
   [Permission.ADMIN]: [
     { id: 1, name: 'ข้อมูลส่วนตัว', Icon: PersonIcon, path: '/home' },
@@ -22,11 +23,17 @@ export const menuTab: MenuModel = {
     { id: 5, name: 'รายชื่อนักศึกษา', Icon: PeopleIcon, path: '/student-list' },
     {
       id: 6,
+      name: 'รออนุมัติ',
+      Icon: HourglassEmptyIcon,
+      path: '/wait-verify',
+    },
+    {
+      id: 7,
       name: 'จัดการประวัติ',
       Icon: ManageHistoryIcon,
       path: '/log-history',
     },
-    { id: 7, name: 'แดชบอร์ด', Icon: DashboardIcon, path: '/dashboard' },
+    { id: 8, name: 'แดชบอร์ด', Icon: DashboardIcon, path: '/dashboard' },
   ],
   [Permission.STAFF_STUDENT]: [
     { id: 1, name: 'ข้อมูลส่วนตัว', Icon: PersonIcon, path: '/home' },
