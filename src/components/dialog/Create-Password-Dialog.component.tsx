@@ -3,11 +3,10 @@ import CreatePasswordComponent from '../Create-Password.component';
 import { ModalAction } from '@/model/unity.model';
 import { PasswordForm, RegisterForm } from '@/model/form.model';
 import { useState } from 'react';
-import { fa } from 'zod/v4/locales';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { PasswordSchema } from '@/schema/form.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { isEmpty } from 'lodash';
+import { AuthService } from '@/services/auth/auth.service';
 
 export default function CreatePasswordDialog({
   open,
@@ -24,11 +23,13 @@ export default function CreatePasswordDialog({
   });
   const {
     handleSubmit,
-    formState: { errors },
+    formState: { isValid },
   } = formControl;
-  const onSubmit: SubmitHandler<PasswordForm> = (data) => {
-    if (!isEmpty(errors)) return;
-    console.log(data, formData);
+  const onSubmit: SubmitHandler<PasswordForm> = async (data) => {
+    if (!isValid) return;
+    const authService = new AuthService();
+    const res = await authService.register({ ...formData, ...data });
+    console.log(res);
 
     setOpenSuccess(true);
   };

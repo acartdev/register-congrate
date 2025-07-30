@@ -2,17 +2,14 @@ import { PasswordForm, passwordHint } from '@/model/form.model';
 import { buttonBgLinear } from '@/theme/utils';
 import { Box, Button, Stack, TextField, Typography } from '@mui/material';
 import SuccessDialog from './dialog/Success-Dialog.component';
-import VerificationDialog from './dialog/Verification-Dialog.component';
 import { FormControlHook, ModalAction } from '@/model/unity.model';
 import { useState } from 'react';
 
 export default function CreatePasswordComponent({
-  open,
   onClose,
   handleClick,
   formControl,
 }: ModalAction & { formControl: FormControlHook<PasswordForm> }) {
-  const [verificationOpen, setVerificationOpen] = useState(false);
   const [emailSentOpen, setEmailSentOpen] = useState(false);
 
   const {
@@ -24,17 +21,6 @@ export default function CreatePasswordComponent({
     if (handleClick) {
       handleClick();
     }
-    setVerificationOpen(true);
-  };
-
-  const handleVerificationClose = () => {
-    setVerificationOpen(false);
-    onClose();
-  };
-
-  const handleAdminVerification = () => {
-    setVerificationOpen(false);
-    setEmailSentOpen(true);
   };
 
   const handleEmailSentClose = () => {
@@ -97,17 +83,6 @@ export default function CreatePasswordComponent({
           </Box>
         </Stack>
       </Stack>
-      {/* <SuccessDialog
-        title='สมัครสมาชิกสำเร็จ'
-        description='กรุณาตรวจสอบอีเมลของท่านที่ใช้สมัครเพื่อยืนยันตัวตนในการสมัครสมาชิก'
-        onClose={onClose}
-        open={open}
-      /> */}
-      <VerificationDialog
-        open={verificationOpen}
-        onClose={handleVerificationClose}
-        onVerify={handleAdminVerification}
-      />
       <SuccessDialog
         title='อีเมลยืนยันถูกส่งแล้ว'
         description='ระบบได้ส่งอีเมลยืนยันไปยังที่อยู่อีเมลของท่านเรียบร้อยแล้ว กรุณาตรวจสอบกล่องจดหมายของท่าน'

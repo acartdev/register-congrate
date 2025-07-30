@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,css,md}\""
+    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,css,md}\"",
+    "generate": "dotenv -e .env.local -- npx prisma migrate dev --name init",
+    "reset:schema": "dotenv -e .env.local -- npx prisma migrate reset --force --skip-seed"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
@@ -17,6 +19,7 @@
     "@mui/material": "^7.2.0",
     "@mui/x-date-pickers": "^8.8.0",
     "apexcharts": "^5.3.1",
+    "axios": "^1.11.0",
     "dayjs": "^1.11.13",
     "lodash": "^4.17.21",
     "next": "15.3.5",
@@ -38,6 +41,7 @@
     "eslint-config-prettier": "^10.1.5",
     "eslint-plugin-prettier": "^5.5.1",
     "prettier": "^3.6.2",
+    "prisma": "^6.13.0",
     "typescript": "^5"
   }
 }
