@@ -72,7 +72,7 @@ export default function RegisterPage() {
       overflow={'hidden'}
       sx={{ ...backgroundLinear }}
     >
-      <Stack height={'100%'} width={'100%'}>
+      <Stack margin={'auto'} maxWidth={600} height={'100%'} width={'100%'}>
         <Box
           position={'relative'}
           height={'10%'}

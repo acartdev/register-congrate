@@ -26,7 +26,7 @@ export const useAuth = () => {
     data: user,
     isLoading,
     error,
-    refetch
+    refetch,
   } = useQuery({
     queryKey: ['auth', 'user'],
     queryFn: getCurrentUser,
@@ -39,7 +39,7 @@ export const useAuth = () => {
     isAuthenticated: !!user,
     isLoading,
     error,
-    refetch
+    refetch,
   };
 };
 
@@ -62,19 +62,17 @@ export const useLogin = () => {
 };
 
 export const useRegister = () => {
-  const queryClient = useQueryClient();
   const router = useRouter();
 
   return useMutation({
-    mutationFn: (registerData: RegisterForm & PasswordForm) => 
-      authService.register(registerData),
+    mutationKey: ['auth', 'register'],
+    mutationFn: async (
+      registerForm: RegisterForm & PasswordForm,
+    ): Promise<HttpResponse<string>> => authService.register(registerForm),
     onSuccess: (response: HttpResponse<string>) => {
-      if (response.status === 200) {
+      if (response.status === 201) {
         router.push('/login');
       }
-    },
-    onError: (error) => {
-      console.error('Registration failed:', error);
     },
   });
 };

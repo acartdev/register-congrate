@@ -29,7 +29,9 @@ export default function SuccessDialog({
       aria-labelledby='alert-dialog-title'
       aria-describedby='alert-dialog-description'
     >
-      <Container sx={{ padding: 2, width: '80vw' }}>
+      <Container
+        sx={{ padding: 2, width: { xs: '80vw', sm: '60vw', md: '20vw' } }}
+      >
         <Stack
           spacing={2}
           height={'100%'}

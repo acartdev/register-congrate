@@ -1,17 +1,12 @@
 import { PasswordForm, passwordHint } from '@/model/form.model';
 import { buttonBgLinear } from '@/theme/utils';
 import { Box, Button, Stack, TextField, Typography } from '@mui/material';
-import SuccessDialog from './dialog/Success-Dialog.component';
 import { FormControlHook, ModalAction } from '@/model/unity.model';
-import { useState } from 'react';
 
 export default function CreatePasswordComponent({
-  onClose,
   handleClick,
   formControl,
 }: ModalAction & { formControl: FormControlHook<PasswordForm> }) {
-  const [emailSentOpen, setEmailSentOpen] = useState(false);
-
   const {
     register,
     formState: { errors },
@@ -21,11 +16,6 @@ export default function CreatePasswordComponent({
     if (handleClick) {
       handleClick();
     }
-  };
-
-  const handleEmailSentClose = () => {
-    setEmailSentOpen(false);
-    onClose();
   };
 
   return (
@@ -83,12 +73,6 @@ export default function CreatePasswordComponent({
           </Box>
         </Stack>
       </Stack>
-      <SuccessDialog
-        title='อีเมลยืนยันถูกส่งแล้ว'
-        description='ระบบได้ส่งอีเมลยืนยันไปยังที่อยู่อีเมลของท่านเรียบร้อยแล้ว กรุณาตรวจสอบกล่องจดหมายของท่าน'
-        onClose={handleEmailSentClose}
-        open={emailSentOpen}
-      />
     </>
   );
 }

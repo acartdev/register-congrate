@@ -32,7 +32,6 @@ model Users {
 
 enum NamePrefix {
   นาย
-  นาง
   นางสาว
 }
 

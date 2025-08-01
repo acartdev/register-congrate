@@ -19,14 +19,12 @@ export class AuthService {
   async register(
     register: RegisterForm & PasswordForm,
   ): Promise<HttpResponse<string>> {
-    const userExists = await this.authRepository.checkUserExists(
-      register.userID,
-    );
+    const userExists = await this.authRepository.checkUserExists(register);
     if (userExists) {
       return {
-        status: 400,
+        status: 409,
         message: 'ผู้ใช้งานนี้มีอยู่แล้ว',
-        error: 'Bad Request',
+        error: 'Conflict',
       };
     }
     if (register.password !== register.confirmPassword) {
@@ -36,7 +34,11 @@ export class AuthService {
         error: 'Bad Request',
       };
     }
-    const res = await this.authRepository.register(register);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { confirmPassword, ...userData } = register;
+    const salt = await bcrypt.genSalt(10);
+    userData.password = await bcrypt.hash(userData.password, salt);
+    await this.authRepository.register(userData);
     return {
       status: 200,
       message: 'ลงทะเบียนสำเร็จ',

@@ -1,11 +1,10 @@
 import axiosInstance from '@/connections/axios.connection';
 import { LoginForm, RegisterForm } from '@/model/form.model';
 import { HttpResponse } from '@/model/http.model';
-import { User } from '@/model/user.model';
 
 export class AuthService {
   constructor() {}
-  async register(register: RegisterForm): Promise<User> {
+  async register(register: RegisterForm): Promise<HttpResponse<string>> {
     const res = await axiosInstance.post('/auth/register', register);
     return res.data;
   }
