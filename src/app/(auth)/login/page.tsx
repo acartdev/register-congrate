@@ -22,6 +22,7 @@ import LoadingComponent from '@/components/Loading.component';
 
 export default function LoginPage() {
   const [openDialog, setOpenDialog] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('กรุณาลองใหม่อีกครั้ง');
   const authService = new AuthService();
   const {
     register,
@@ -38,7 +39,12 @@ export default function LoginPage() {
   const { mutate, isPending, error } = useMutation({
     mutationFn: authService.login,
     mutationKey: ['login'],
-    onSuccess: () => {
+    onSuccess: (res) => {
+      if (res.status !== 200) {
+        setErrorMessage(res.message || 'เข้าสู่ระบบล้มเหลว');
+        setOpenDialog(true);
+        return;
+      }
       router.push('/');
     },
     onError: () => {
@@ -63,7 +69,7 @@ export default function LoginPage() {
     <>
       <ErrorDialog
         title='เกิดข้อผิดพลาด'
-        description={error?.message || 'กรุณาลองใหม่อีกครั้ง'}
+        description={error?.message || errorMessage}
         open={openDialog}
         onClose={() => setOpenDialog(false)}
         isLink={false}

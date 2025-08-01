@@ -1,5 +1,6 @@
 import axiosInstance from '@/connections/axios.connection';
 import { LoginForm, RegisterForm } from '@/model/form.model';
+import { HttpResponse } from '@/model/http.model';
 import { User } from '@/model/user.model';
 
 export class AuthService {
@@ -9,7 +10,7 @@ export class AuthService {
     return res.data;
   }
 
-  async login(credentials: LoginForm): Promise<string> {
+  async login(credentials: LoginForm): Promise<HttpResponse<string>> {
     const res = await axiosInstance.post('/auth/login', credentials);
     return res.data;
   }

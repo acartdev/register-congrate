@@ -12,6 +12,7 @@ export interface User {
   permit?: Permission;
   created_at: Date | string;
   updated_at: Date | string;
+  password?: string;
   department?: string;
 }
 
