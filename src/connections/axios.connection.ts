@@ -55,6 +55,11 @@ api.interceptors.response.use(
     }
 
     if (error.response?.status === 401 && !originalRequest._retry) {
+      // Skip refresh for auth endpoints to avoid infinite loops
+      if (originalRequest.url?.includes('/auth/')) {
+        return Promise.reject(error);
+      }
+
       originalRequest._retry = true;
 
       if (isRefreshing) {
@@ -72,7 +77,7 @@ api.interceptors.response.use(
       isRefreshing = true;
 
       try {
-        await api.post('/auth/refresh', {}, { withCredentials: true });
+        await api.post('/auth/refresh', {});
         processQueue(null);
         return api(originalRequest);
       } catch (refreshError) {

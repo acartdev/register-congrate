@@ -26,7 +26,7 @@ export const generateRefreshToken = (payload: JWTPayload): string => {
 export const verifyAccessToken = (token: string): DecodedToken | null => {
   try {
     return jwt.verify(token, ACCESS_TOKEN_SECRET) as DecodedToken;
-  } catch (error) {
+  } catch {
     return null;
   }
 };
@@ -34,7 +34,7 @@ export const verifyAccessToken = (token: string): DecodedToken | null => {
 export const verifyRefreshToken = (token: string): DecodedToken | null => {
   try {
     return jwt.verify(token, REFRESH_TOKEN_SECRET) as DecodedToken;
-  } catch (error) {
+  } catch {
     return null;
   }
 };

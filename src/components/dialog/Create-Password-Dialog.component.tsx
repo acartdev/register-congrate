@@ -8,6 +8,9 @@ import { PasswordSchema } from '@/schema/form.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRegister } from '@/hook/auth.hook';
 import SuccessDialog from './Success-Dialog.component';
+import ErrorDialog from './Error-Dialog.component';
+import { AxiosError } from 'axios';
+import { HttpResponse } from '@/model/http.model';
 
 export default function CreatePasswordDialog({
   open,
@@ -15,7 +18,8 @@ export default function CreatePasswordDialog({
   onClose,
 }: ModalAction & { formData: RegisterForm }) {
   const [emailSentOpen, setEmailSentOpen] = useState(false);
-
+  const [openDialog, setOpenDialog] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('กรุณาลองใหม่อีกครั้ง');
   const [openSuccess, setOpenSuccess] = useState(false);
   const formControl = useForm<PasswordForm>({
     resolver: zodResolver(PasswordSchema),
@@ -42,7 +46,9 @@ export default function CreatePasswordDialog({
           setOpenSuccess(true);
         },
         onError: (error) => {
-          console.error('Registration failed:', error);
+          const err = error as AxiosError<HttpResponse<string>>;
+          setErrorMessage(err.response?.data?.message || 'เกิดข้อผิดพลาด');
+          setOpenDialog(true);
         },
       },
     );
@@ -83,6 +89,16 @@ export default function CreatePasswordDialog({
         description='ระบบได้ส่งอีเมลยืนยันไปยังที่อยู่อีเมลของท่านเรียบร้อยแล้ว กรุณาตรวจสอบกล่องจดหมายของท่าน'
         onClose={handleEmailSentClose}
         open={emailSentOpen}
+      />
+      <ErrorDialog
+        title='เกิดข้อผิดพลาด'
+        description={errorMessage}
+        open={openDialog}
+        onClose={() => {
+          setOpenDialog(false);
+          onClose();
+        }}
+        isLink={false}
       />
     </>
   );

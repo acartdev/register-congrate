@@ -1,5 +1,6 @@
 import { QRCodeFormData } from '@/schemas/form.schema';
 import { UseFormReturn } from 'react-hook-form';
+import { Permission, UserRole } from './user.model';
 
 export enum NamePrefix {
   MR = 'นาย',
@@ -27,6 +28,8 @@ export interface RegisterForm {
   email: string;
   deptID: number;
   phone?: string;
+  role: UserRole;
+  permit: Permission;
 }
 
 export interface PasswordForm {

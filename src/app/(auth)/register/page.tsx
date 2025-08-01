@@ -24,6 +24,7 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import isEmpty from 'lodash/isEmpty';
+import { Permission, UserRole } from '@/model/user.model';
 const steps = ['กรอกข้อมูลส่วนตัว', 'สร้างรหัสผ่าน'];
 export default function RegisterPage() {
   const [open, onOpen] = useState(false);
@@ -34,6 +35,8 @@ export default function RegisterPage() {
     deptID: 1,
     email: '',
     firstName: '',
+    role: UserRole.STUDENT,
+    permit: Permission.VIEW,
     lastName: '',
     phone: '',
   });
@@ -47,6 +50,8 @@ export default function RegisterPage() {
       firstName: '',
       lastName: '',
       phone: '',
+      role: UserRole.STUDENT,
+      permit: Permission.VIEW,
     },
   });
   const {

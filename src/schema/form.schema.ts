@@ -1,4 +1,5 @@
 import { NamePrefix } from '@/model/form.model';
+import { Permission, UserRole } from '@/model/user.model';
 import { z } from 'zod'; // Add new import
 export const LoginSchemaModel = z.object({
   userID: z
@@ -42,6 +43,8 @@ export const RegisterSchema = z.object({
     .optional(),
   email: z.string().email('รูปแบบอีเมลไม่ถูกต้อง').min(1, 'กรุณากรอกอีเมล'),
   deptID: z.number(),
+  role: z.nativeEnum(UserRole),
+  permit: z.nativeEnum(Permission),
 });
 
 export const PasswordSchema = z

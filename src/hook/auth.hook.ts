@@ -48,6 +48,7 @@ export const useLogin = () => {
   const router = useRouter();
 
   return useMutation({
+    mutationKey: ['login'],
     mutationFn: (credentials: LoginForm) => authService.login(credentials),
     onSuccess: (response: HttpResponse<string>) => {
       if (response.status === 200) {
@@ -65,7 +66,7 @@ export const useRegister = () => {
   const router = useRouter();
 
   return useMutation({
-    mutationKey: ['auth', 'register'],
+    mutationKey: ['register'],
     mutationFn: async (
       registerForm: RegisterForm & PasswordForm,
     ): Promise<HttpResponse<string>> => authService.register(registerForm),
