@@ -7,19 +7,20 @@ import { Box, Button, Divider, Stack, Typography } from '@mui/material';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useEffect, useState } from 'react';
 import { useSnackStore } from '@/_store/snackStore';
-import { Permission, UserRole } from '@/model/user.model';
+import { Permission, User, UserRole } from '@/model/user.model';
 import LoadingComponent from '@/components/Loading.component';
 import { useAuth } from '@/hook/auth.hook';
 import { useUpdateUser } from '@/hook/user.hook';
 import { HttpResponse } from '@/model/http.model';
 import { AxiosError } from 'axios';
+import { useUserStore } from '@/_store/userStore';
 
 export default function Homepage() {
   const [isEdit, setIsEdit] = useState(false);
   const { onOpenSnack, updateSnackContent } = useSnackStore();
   const { user, isLoading } = useAuth();
   const { mutate, isPending } = useUpdateUser();
-
+  const { setUser } = useUserStore();
   const formControl = useForm<RegisterForm>({
     resolver: zodResolver(RegisterSchema),
     defaultValues: {
@@ -44,6 +45,7 @@ export default function Homepage() {
   } = formControl;
   useEffect(() => {
     if (user) {
+      setUser(user as User);
       reset({
         ...user,
         prefix: user.prefix || NamePrefix.MR,

@@ -148,6 +148,7 @@ export default function RegisterFormComponent({
           id='select-prefix'
           defaultValue={1}
           label='แผนกวิชา'
+          value={getValues('deptID')}
           {...register('deptID')}
         >
           {departmentDefault.map((item, key) => (

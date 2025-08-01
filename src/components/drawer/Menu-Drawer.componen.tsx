@@ -1,8 +1,8 @@
+'use client';
+import { useUserStore } from '@/_store/userStore';
 import { menuTab } from '@/data/menu-tab';
-import { mockUser } from '@/data/mock';
-import { NamePrefix } from '@/model/form.model';
 import { ModalAction } from '@/model/unity.model';
-import { Permission, User } from '@/model/user.model';
+import { Permission } from '@/model/user.model';
 import { backgroundMenuLinear } from '@/theme/utils';
 import {
   Box,
@@ -22,6 +22,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 export default function MenuDrawer({ open, onClose }: ModalAction) {
+  const { user } = useUserStore();
   const DrawerList = (
     <Box>
       <List disablePadding>
@@ -54,14 +55,14 @@ export default function MenuDrawer({ open, onClose }: ModalAction) {
       onClose={onClose}
     >
       <Box
+        minWidth={280}
         sx={{
-          minWidth: '60vw',
           height: '100%',
           paddingTop: 2,
           ...backgroundMenuLinear,
         }}
       >
-        <Stack>
+        <Stack maxWidth={280}>
           <Container>
             <Grid container>
               <Grid size={4}>
@@ -82,10 +83,10 @@ export default function MenuDrawer({ open, onClose }: ModalAction) {
                   justifyContent={'center'}
                 >
                   <Typography color='textPrimary'>
-                    {mockUser.firstName + ' ' + mockUser.lastName}
+                    {user?.firstName + ' ' + user?.lastName}
                   </Typography>
                   <Typography fontSize={12} color='textSecondary'>
-                    {mockUser.userID}
+                    {user?.userID}
                   </Typography>
                 </Box>
               </Grid>
