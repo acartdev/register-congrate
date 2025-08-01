@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getServerCookie } from '@/helper/cookie.helper';
 import { verifyAccessToken } from '@/helper/jwt.helper';
-import { AuthUser } from '@/model/auth.model';
+import { AuthService } from '@/backend-service/services/auth.service';
 
 export async function GET(req: Request) {
   try {
@@ -16,25 +16,23 @@ export async function GET(req: Request) {
     }
 
     const decoded = verifyAccessToken(accessToken);
-    
+
     if (!decoded) {
       return NextResponse.json(
         { status: 401, message: 'โทเคนไม่ถูกต้องหรือหมดอายุ' },
         { status: 401 },
       );
     }
-
-    const user: AuthUser = {
-      userID: decoded.userID,
-      role: decoded.role,
-      email: decoded.email,
-    };
-
-    return NextResponse.json({
-      status: 200,
-      message: 'ดึงข้อมูลผู้ใช้สำเร็จ',
-      data: user,
-    });
+    const authService = new AuthService();
+    const userData = await authService.getUserById(decoded.userID);
+    return NextResponse.json(
+      {
+        status: 200,
+        message: 'ดึงข้อมูลผู้ใช้สำเร็จ',
+        data: userData,
+      },
+      { status: 200 },
+    );
   } catch {
     return NextResponse.json(
       { status: 500, message: 'เกิดข้อผิดพลาดในการดึงข้อมูลผู้ใช้' },

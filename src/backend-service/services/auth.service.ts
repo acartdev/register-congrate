@@ -12,6 +12,7 @@ import {
 import { AuthTokens } from '@/model/auth.model';
 import bcrypt from 'bcrypt';
 import { UserRole } from '@/model/user.model';
+import { Users } from '@/generated/prisma';
 export class AuthService {
   private authRepository: AuthRepository;
   constructor() {
@@ -44,6 +45,20 @@ export class AuthService {
       status: 200,
       message: 'ลงทะเบียนสำเร็จ',
     };
+  }
+
+  async getUserById(userID: string): Promise<Omit<Users, 'password'> | null> {
+    try {
+      const user = await this.authRepository.getUserByUserId(userID);
+      if (user) {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { password, ...userData } = user;
+        return userData;
+      }
+      return null;
+    } catch {
+      return null;
+    }
   }
 
   async login(credentials: {

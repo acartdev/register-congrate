@@ -3,7 +3,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { AuthService } from '@/services/auth/auth.service';
 import { LoginForm, RegisterForm, PasswordForm } from '@/model/form.model';
-import { AuthUser } from '@/model/auth.model';
 import { HttpResponse } from '@/model/http.model';
 import axiosInstance from '@/connections/axios.connection';
 import { useRouter } from 'next/navigation';
@@ -11,7 +10,7 @@ import { useRouter } from 'next/navigation';
 const authService = new AuthService();
 
 // Get current user from token verification
-const getCurrentUser = async (): Promise<AuthUser | null> => {
+const getCurrentUser = async (): Promise<RegisterForm | null> => {
   try {
     const response = await axiosInstance.get('/auth/me');
     return response.data.data;
@@ -28,7 +27,7 @@ export const useAuth = () => {
     error,
     refetch,
   } = useQuery({
-    queryKey: ['auth', 'user'],
+    queryKey: ['get_me'],
     queryFn: getCurrentUser,
     retry: false,
     staleTime: 5 * 60 * 1000, // 5 minutes

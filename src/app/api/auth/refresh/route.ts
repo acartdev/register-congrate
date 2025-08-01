@@ -26,22 +26,20 @@ export async function POST(req: Request) {
       });
       
       // Set new HttpOnly cookies
-      res.headers.set('Set-Cookie', [
-        setServerCookie('accessToken', accessToken, {
-          httpOnly: true,
-          secure: process.env.NODE_ENV === 'production',
-          sameSite: 'lax',
-          maxAge: 15 * 60, // 15 minutes
-          path: '/',
-        }),
-        setServerCookie('refreshToken', newRefreshToken, {
-          httpOnly: true,
-          secure: process.env.NODE_ENV === 'production',
-          sameSite: 'lax',
-          maxAge: 7 * 24 * 60 * 60, // 7 days
-          path: '/',
-        }),
-      ].join(', '));
+      res.headers.append('Set-Cookie', setServerCookie('accessToken', accessToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        maxAge: 15 * 60, // 15 minutes
+        path: '/',
+      }));
+      res.headers.append('Set-Cookie', setServerCookie('refreshToken', newRefreshToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        maxAge: 7 * 24 * 60 * 60, // 7 days
+        path: '/',
+      }));
       
       return res;
     }

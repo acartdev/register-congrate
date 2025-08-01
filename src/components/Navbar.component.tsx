@@ -5,6 +5,7 @@ import Image from 'next/image';
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
 import { useState } from 'react';
 import LoginIcon from '@mui/icons-material/Login';
+import { useLogout } from '@/hook/auth.hook';
 export default function NavbarComponent({
   openMenu,
 }: {
@@ -19,6 +20,12 @@ export default function NavbarComponent({
   const handleClose = () => {
     setAnchorEl(undefined);
   };
+  const logoutMutation = useLogout();
+
+  const handleLogout = () => {
+    logoutMutation.mutate();
+  };
+
   return (
     <Box sx={{ ...navbarSyle }} component={'nav'}>
       <IconButton onClick={handleOpen} aria-label='menu' color='primary'>
@@ -46,7 +53,7 @@ export default function NavbarComponent({
             color='error'
             sx={{ p: 0, fontSize: 16, m: 0 }}
             size='small'
-            onClick={handleClose}
+            onClick={handleLogout}
             endIcon={<LoginIcon color='error' />}
           >
             ออกจากระบบ
