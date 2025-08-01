@@ -11,6 +11,7 @@ import {
 } from '@/helper/jwt.helper';
 import { AuthTokens } from '@/model/auth.model';
 import bcrypt from 'bcrypt';
+import { UserRole } from '@/model/user.model';
 export class AuthService {
   private authRepository: AuthRepository;
   constructor() {
@@ -50,7 +51,7 @@ export class AuthService {
     password: string;
   }): Promise<HttpResponse<AuthTokens>> {
     try {
-      const res = await this.authRepository.login(credentials);
+      const res = await this.authRepository.getUserByUserId(credentials.userID);
       if (!isEmpty(res)) {
         const comparePassword = await bcrypt.compare(
           credentials.password,
@@ -66,7 +67,7 @@ export class AuthService {
         }
         const payload: JWTPayload = {
           userID: res.userID,
-          role: res.role!,
+          role: res.role as UserRole,
           email: res.email,
         };
         const accessToken = generateAccessToken(payload);
