@@ -1,7 +1,7 @@
 'use client';
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { AuthService } from '@/services/auth/auth.service';
+import { AuthService } from '@/services/auth.service';
 import { LoginForm, RegisterForm, PasswordForm } from '@/model/form.model';
 import { HttpResponse } from '@/model/http.model';
 import axiosInstance from '@/connections/axios.connection';
@@ -84,8 +84,7 @@ export const useLogout = () => {
       queryClient.clear();
       router.push('/login');
     },
-    onError: (error) => {
-      // Even if logout fails on server, clear client state
+    onError: () => {
       queryClient.clear();
       router.push('/login');
     },
@@ -100,7 +99,7 @@ export const useRefreshToken = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['auth'] });
     },
-    onError: (error) => {
+    onError: () => {
       queryClient.clear();
       if (typeof window !== 'undefined') {
         window.location.href = '/login';

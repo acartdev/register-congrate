@@ -1,6 +1,7 @@
 import { NamePrefix } from './form.model';
 
 export interface User {
+  uuid: string;
   userID: string;
   prefix: NamePrefix;
   firstName: string;

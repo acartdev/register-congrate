@@ -18,9 +18,8 @@ import { useUserStore } from '@/_store/userStore';
 export default function Homepage() {
   const [isEdit, setIsEdit] = useState(false);
   const { onOpenSnack, updateSnackContent } = useSnackStore();
-  const { user, isLoading } = useAuth();
   const { mutate, isPending } = useUpdateUser();
-  const { setUser } = useUserStore();
+  const { user, isLoading } = useUserStore();
   const formControl = useForm<RegisterForm>({
     resolver: zodResolver(RegisterSchema),
     defaultValues: {
@@ -45,7 +44,6 @@ export default function Homepage() {
   } = formControl;
   useEffect(() => {
     if (user) {
-      setUser(user as User);
       reset({
         ...user,
         prefix: user.prefix || NamePrefix.MR,

@@ -26,21 +26,22 @@ export default function MenuDrawer({ open, onClose }: ModalAction) {
   const DrawerList = (
     <Box>
       <List disablePadding>
-        {menuTab[Permission.ADMIN].map((item) => (
-          <ListItem key={item.id} onClick={onClose}>
-            <Button
-              size='small'
-              sx={{ padding: 0 }}
-              LinkComponent={Link}
-              href={item.path}
-            >
-              <ListItemIcon sx={{ minWidth: 0, marginRight: 1 }}>
-                {<item.Icon color='secondary' />}
-              </ListItemIcon>
-              <ListItemText secondary={item.name} />
-            </Button>
-          </ListItem>
-        ))}
+        {user?.permit &&
+          menuTab[user?.permit].map((item) => (
+            <ListItem key={item.id} onClick={onClose}>
+              <Button
+                size='small'
+                sx={{ padding: 0 }}
+                LinkComponent={Link}
+                href={item.path}
+              >
+                <ListItemIcon sx={{ minWidth: 0, marginRight: 1 }}>
+                  {<item.Icon color='secondary' />}
+                </ListItemIcon>
+                <ListItemText secondary={item.name} />
+              </Button>
+            </ListItem>
+          ))}
       </List>
     </Box>
   );

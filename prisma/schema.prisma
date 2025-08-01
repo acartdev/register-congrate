@@ -15,8 +15,9 @@ datasource db {
 }
 
 model Users {
-  userID      String      @id
-  uuid        String?  @unique @default(uuid()) @db.Uuid
+  id          Int         @unique    @id @default(autoincrement())
+  userID      String      @unique
+  uuid        String?     @unique @default(uuid()) @db.Uuid
   prefix      NamePrefix
   firstName   String
   lastName    String
@@ -29,6 +30,8 @@ model Users {
   updated_at  DateTime    @updatedAt
   department  String?
   password    String
+
+  activities   Activity[]
 }
 
 enum NamePrefix {
@@ -47,4 +50,17 @@ enum Permission {
   STAFF_TEACHER
   STAFF_STUDENT
   VIEW
+}
+
+
+model Activity {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String?
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+  attachment  String
+  user_id  Int
+
+  users       Users    @relation(fields: [user_id], references: [id])
 }
