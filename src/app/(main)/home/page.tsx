@@ -145,13 +145,14 @@ export default function Homepage() {
         alignItems={'center'}
         justifyContent={'space-between'}
       >
+        <LoadingComponent open={isPending} />
         <Typography fontSize={18}>ข้อมูลส่วนตัว</Typography>
         {ButtonAction}
       </Box>
       <Divider sx={{ marginY: 1.5 }} />
       <Stack marginTop={4}>
-        {isLoading || isPending ? (
-          <LoadingComponent open={isLoading || isPending} />
+        {isLoading ? (
+          <LoadingComponent open={isLoading} />
         ) : (
           <RegisterFormComponent
             isReadOnly={isEdit === false}

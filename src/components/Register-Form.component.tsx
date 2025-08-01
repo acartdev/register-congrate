@@ -11,6 +11,7 @@ import {
   Stack,
   TextField,
 } from '@mui/material';
+import { isEmpty } from 'lodash';
 
 export default function RegisterFormComponent({
   isReadOnly,
@@ -19,6 +20,7 @@ export default function RegisterFormComponent({
   const {
     register,
     formState: { errors },
+    getValues,
   } = formControl;
 
   return (
@@ -26,7 +28,10 @@ export default function RegisterFormComponent({
       <TextField
         size='small'
         slotProps={{
-          input: { readOnly: isReadOnly },
+          input: {
+            readOnly: !isEmpty(getValues('userID')),
+            disabled: !isEmpty(getValues('userID')),
+          },
           htmlInput: {
             inputMode: 'numeric',
           },

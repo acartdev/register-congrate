@@ -1,6 +1,7 @@
 import {
   FieldValues,
   FormState,
+  UseFormGetValues,
   UseFormHandleSubmit,
   UseFormRegister,
   UseFormWatch,
@@ -27,6 +28,7 @@ export interface FormAction<T extends FieldValues> {
     formState: FormState<T>;
     handleSubmit: UseFormHandleSubmit<T, T>;
     watch: UseFormWatch<T>;
+    getValues: UseFormGetValues<T>;
   };
 }
 
