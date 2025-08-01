@@ -3,24 +3,22 @@ import RegisterFormComponent from '@/components/Register-Form.component';
 import { NamePrefix, RegisterForm } from '@/model/form.model';
 import { RegisterSchema } from '@/schema/form.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
-import {
-  Backdrop,
-  Box,
-  Button,
-  CircularProgress,
-  Divider,
-  Stack,
-  Typography,
-} from '@mui/material';
+import { Box, Button, Divider, Stack, Typography } from '@mui/material';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useEffect, useState } from 'react';
-import { mockUser } from '@/data/mock';
 import { useSnackStore } from '@/_store/snackStore';
+import { Permission, UserRole } from '@/model/user.model';
+import LoadingComponent from '@/components/Loading.component';
+import { useAuth } from '@/hook/auth.hook';
+import { useUpdateUser } from '@/hook/user.hook';
+import { HttpResponse } from '@/model/http.model';
+import { AxiosError } from 'axios';
 
 export default function Homepage() {
-  const [isLoad, setIsload] = useState(true);
   const [isEdit, setIsEdit] = useState(false);
   const { onOpenSnack, updateSnackContent } = useSnackStore();
+  const { user, isLoading } = useAuth();
+  const { mutate, isPending } = useUpdateUser();
 
   const formControl = useForm<RegisterForm>({
     resolver: zodResolver(RegisterSchema),
@@ -31,6 +29,8 @@ export default function Homepage() {
       email: '',
       firstName: '',
       lastName: '',
+      role: UserRole.STUDENT,
+      permit: Permission.VIEW,
       phone: '',
     },
   });
@@ -39,14 +39,19 @@ export default function Homepage() {
     reset,
     watch,
     handleSubmit,
-    formState: { isDirty, isSubmitSuccessful },
+
+    formState: { isDirty, isSubmitSuccessful, isValid },
   } = formControl;
   useEffect(() => {
-    if (isLoad) {
-      setTimeout(() => {
-        reset(mockUser);
-        setIsload(false);
-      }, 1000);
+    if (user) {
+      reset({
+        ...user,
+        prefix: user.prefix || NamePrefix.MR,
+        deptID: user.deptID || 1,
+        role: user.role || UserRole.STUDENT,
+        permit: user.permit || Permission.VIEW,
+        phone: user.phone || '',
+      });
     }
     if (isSubmitSuccessful) {
       reset(watch(), {
@@ -55,7 +60,7 @@ export default function Homepage() {
         keepDefaultValues: false,
       });
     }
-  }, [isSubmitSuccessful, reset]);
+  }, [reset, watch, isSubmitSuccessful, user]);
 
   const onSubmit: SubmitHandler<RegisterForm> = (data) => {
     if (!isDirty) {
@@ -66,12 +71,36 @@ export default function Homepage() {
       onOpenSnack();
       return;
     }
-    updateSnackContent({
-      title: 'แก้ไขข้อมูลสำเร็จ',
-      status: 'success',
-    });
-    onOpenSnack();
-    setIsEdit(false);
+    if (isValid) {
+      data.uuid = user?.uuid || '';
+      mutate(data, {
+        onSuccess: () => {
+          updateSnackContent({
+            title: 'แก้ไขข้อมูลสำเร็จ',
+            status: 'success',
+          });
+          onOpenSnack();
+          setIsEdit(false);
+        },
+        onError: (error) => {
+          const err = error as AxiosError<HttpResponse<string>>;
+          updateSnackContent({
+            status: 'error',
+            title:
+              err.response?.data?.message || 'เกิดข้อผิดพลาดในการแก้ไขข้อมูล',
+          });
+          onOpenSnack();
+        },
+      });
+      return;
+    } else {
+      updateSnackContent({
+        status: 'error',
+        title: 'ข้อมูลไม่ถูกต้อง กรุณาตรวจสอบ',
+      });
+      onOpenSnack();
+      return;
+    }
   };
   const onResetForm = () => {
     setIsEdit(false);
@@ -86,7 +115,7 @@ export default function Homepage() {
         sx={{ color: 'primary.A700' }}
         variant='outlined'
       >
-        ยกเลิก
+        ยกเลิก {isValid}
       </Button>
       <Button
         onClick={handleSubmit(onSubmit)}
@@ -110,7 +139,7 @@ export default function Homepage() {
     </Button>
   );
   return (
-    <Box>
+    <Box width={{ xs: '100%', sm: 600 }} marginX={'auto'} paddingY={2}>
       <Box
         display={'flex'}
         alignItems={'center'}
@@ -121,13 +150,8 @@ export default function Homepage() {
       </Box>
       <Divider sx={{ marginY: 1.5 }} />
       <Stack marginTop={4}>
-        {isLoad ? (
-          <Backdrop
-            sx={(theme) => ({ color: '#fff', zIndex: theme.zIndex.drawer + 1 })}
-            open={isLoad}
-          >
-            <CircularProgress color='inherit' />
-          </Backdrop>
+        {isLoading || isPending ? (
+          <LoadingComponent open={isLoading || isPending} />
         ) : (
           <RegisterFormComponent
             isReadOnly={isEdit === false}

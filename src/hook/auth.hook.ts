@@ -55,9 +55,6 @@ export const useLogin = () => {
         router.push('/');
       }
     },
-    onError: (error) => {
-      console.error('Login failed:', error);
-    },
   });
 };
 
@@ -88,7 +85,6 @@ export const useLogout = () => {
       router.push('/login');
     },
     onError: (error) => {
-      console.error('Logout failed:', error);
       // Even if logout fails on server, clear client state
       queryClient.clear();
       router.push('/login');
@@ -105,7 +101,6 @@ export const useRefreshToken = () => {
       queryClient.invalidateQueries({ queryKey: ['auth'] });
     },
     onError: (error) => {
-      console.error('Token refresh failed:', error);
       queryClient.clear();
       if (typeof window !== 'undefined') {
         window.location.href = '/login';

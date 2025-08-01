@@ -6,32 +6,48 @@ export class AuthRepository {
     register: RegisterForm & { password: string },
   ): Promise<Users | null> {
     const client = new PrismaClient();
-    const user = await client.users.create({
-      data: register,
-    });
-    return user;
+    try {
+      const user = await client.users.create({
+        data: register,
+      });
+      return user;
+    } catch (error) {
+      return null;
+    } finally {
+      await client.$disconnect();
+    }
   }
   async getUserByUserId(userID: string): Promise<Users | null> {
     const client = new PrismaClient();
-    const result = await client.users.findFirst({
-      where: {
-        userID: userID,
-      },
-    });
-    return result;
+    try {
+      const user = await client.users.findUnique({
+        where: { userID },
+      });
+      return user;
+    } catch {
+      return null;
+    } finally {
+      await client.$disconnect();
+    }
   }
   async checkUserExists(register: RegisterForm): Promise<boolean> {
     const client = new PrismaClient();
-    const result = await client.users.findFirst({
-      where: {
-        OR: [
-          {
-            userID: register.userID,
-            email: register.email,
-          },
-        ],
-      },
-    });
-    return !!result;
+    try {
+      const result = await client.users.findFirst({
+        where: {
+          OR: [
+            {
+              userID: register.userID,
+              email: register.email,
+            },
+          ],
+        },
+      });
+      return !!result;
+    } catch {
+      return false;
+    } finally {
+      await client.$disconnect();
+    }
   }
 }

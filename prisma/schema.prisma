@@ -16,6 +16,7 @@ datasource db {
 
 model Users {
   userID      String      @id
+  uuid        String?  @unique @default(uuid()) @db.Uuid
   prefix      NamePrefix
   firstName   String
   lastName    String

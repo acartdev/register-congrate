@@ -21,6 +21,7 @@ export interface QRCodeData
 }
 
 export interface RegisterForm {
+  uuid?: string;
   userID: string;
   prefix: NamePrefix;
   firstName: string;
