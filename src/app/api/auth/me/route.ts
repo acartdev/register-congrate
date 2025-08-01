@@ -1,0 +1,44 @@
+import { NextResponse } from 'next/server';
+import { getServerCookie } from '@/helper/cookie.helper';
+import { verifyAccessToken } from '@/helper/jwt.helper';
+import { AuthUser } from '@/model/auth.model';
+
+export async function GET(req: Request) {
+  try {
+    const cookieHeader = req.headers.get('cookie') || '';
+    const accessToken = getServerCookie(cookieHeader, 'accessToken');
+
+    if (!accessToken) {
+      return NextResponse.json(
+        { status: 401, message: 'ไม่พบโทเคนการเข้าสู่ระบบ' },
+        { status: 401 },
+      );
+    }
+
+    const decoded = verifyAccessToken(accessToken);
+    
+    if (!decoded) {
+      return NextResponse.json(
+        { status: 401, message: 'โทเคนไม่ถูกต้องหรือหมดอายุ' },
+        { status: 401 },
+      );
+    }
+
+    const user: AuthUser = {
+      userID: decoded.userID,
+      role: decoded.role,
+      email: decoded.email,
+    };
+
+    return NextResponse.json({
+      status: 200,
+      message: 'ดึงข้อมูลผู้ใช้สำเร็จ',
+      data: user,
+    });
+  } catch {
+    return NextResponse.json(
+      { status: 500, message: 'เกิดข้อผิดพลาดในการดึงข้อมูลผู้ใช้' },
+      { status: 500 },
+    );
+  }
+}

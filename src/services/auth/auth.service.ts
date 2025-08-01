@@ -14,4 +14,13 @@ export class AuthService {
     const res = await axiosInstance.post('/auth/login', credentials);
     return res.data;
   }
+
+  async logout(): Promise<void> {
+    await axiosInstance.post('/auth/logout');
+  }
+
+  async refreshToken(): Promise<HttpResponse<string>> {
+    const res = await axiosInstance.post('/auth/refresh');
+    return res.data;
+  }
 }

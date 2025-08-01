@@ -14,16 +14,16 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { LoginForm } from '@/model/form.model';
 import { LoginSchemaModel } from '@/schema/form.schema';
-import { useRouter } from 'next/navigation';
-import { useMutation } from '@tanstack/react-query';
-import { AuthService } from '@/services/auth/auth.service';
+import { useLogin } from '@/hook/auth.hook';
 import ErrorDialog from '@/components/dialog/Error-Dialog.component';
 import LoadingComponent from '@/components/Loading.component';
+import { AxiosError } from 'axios';
+import { HttpResponse } from '@/model/http.model';
 
 export default function LoginPage() {
   const [openDialog, setOpenDialog] = useState(false);
   const [errorMessage, setErrorMessage] = useState('กรุณาลองใหม่อีกครั้ง');
-  const authService = new AuthService();
+  
   const {
     register,
     handleSubmit,
@@ -35,25 +35,22 @@ export default function LoginPage() {
       password: '',
     },
   });
-  const router = useRouter();
-  const { mutate, isPending, error } = useMutation({
-    mutationFn: authService.login,
-    mutationKey: ['login'],
-    onSuccess: (res) => {
-      if (res.status !== 200) {
-        setErrorMessage(res.message || 'เข้าสู่ระบบล้มเหลว');
-        setOpenDialog(true);
-        return;
-      }
-      router.push('/');
-    },
-    onError: () => {
-      setOpenDialog(true);
-    },
-  });
+
+  const loginMutation = useLogin();
+
   const onSubmit: SubmitHandler<LoginForm> = (data) => {
     if (isValid) {
-      mutate(data);
+      loginMutation.mutate(data, {
+        onError: (err) => {
+          if (err instanceof Error) {
+            const error = err as AxiosError<HttpResponse<string>>;
+            setErrorMessage(error.response?.data?.message || 'เข้าสู่ระบบล้มเหลว');
+          } else {
+            setErrorMessage('เข้าสู่ระบบล้มเหลว');
+          }
+          setOpenDialog(true);
+        },
+      });
     }
   };
 
@@ -69,7 +66,7 @@ export default function LoginPage() {
     <>
       <ErrorDialog
         title='เกิดข้อผิดพลาด'
-        description={error?.message || errorMessage}
+        description={errorMessage}
         open={openDialog}
         onClose={() => setOpenDialog(false)}
         isLink={false}
@@ -87,7 +84,7 @@ export default function LoginPage() {
       >
         <BubbleComponent />
 
-        <LoadingComponent open={isPending} />
+        <LoadingComponent open={loginMutation.isPending} />
         <Stack
           height={{ xs: '100%', lg: '80%' }}
           width={{ xs: '100%', lg: '20%' }}

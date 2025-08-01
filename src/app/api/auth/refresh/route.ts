@@ -1,36 +1,31 @@
 import { AuthService } from '@/backend-service/services/auth.service';
-import { HttpResponse } from '@/model/http.model';
 import { NextResponse } from 'next/server';
-import { setServerCookie } from '@/helper/cookie.helper';
+import { getServerCookie, setServerCookie } from '@/helper/cookie.helper';
 
-export async function POST(request: Request) {
-  const body = await request.json();
-  const { userID, password } = body;
+export async function POST(req: Request) {
+  const authService = new AuthService();
+  const cookieHeader = req.headers.get('cookie') || '';
+  const refreshToken = getServerCookie(cookieHeader, 'refreshToken');
 
-  if (!userID || !password) {
+  if (!refreshToken) {
     return NextResponse.json(
-      {
-        status: 400,
-        message: 'กรุณากรอกข้อมูลให้ครบถ้วน',
-      },
-      { status: 400 },
+      { message: 'Refresh token is required' },
+      { status: 401 },
     );
   }
 
   try {
-    const authService = new AuthService();
-    const response = await authService.login({ userID, password });
+    const response = await authService.refreshToken(refreshToken);
     
     if (response.status === 200 && response.data) {
-      const { accessToken, refreshToken } = response.data;
+      const { accessToken, refreshToken: newRefreshToken } = response.data;
       
-      // Create response with cookies
       const res = NextResponse.json({
         status: 200,
         message: response.message,
       });
       
-      // Set HttpOnly cookies
+      // Set new HttpOnly cookies
       res.headers.set('Set-Cookie', [
         setServerCookie('accessToken', accessToken, {
           httpOnly: true,
@@ -39,7 +34,7 @@ export async function POST(request: Request) {
           maxAge: 15 * 60, // 15 minutes
           path: '/',
         }),
-        setServerCookie('refreshToken', refreshToken, {
+        setServerCookie('refreshToken', newRefreshToken, {
           httpOnly: true,
           secure: process.env.NODE_ENV === 'production',
           sameSite: 'lax',
@@ -53,8 +48,8 @@ export async function POST(request: Request) {
     
     return NextResponse.json(response, { status: response.status });
   } catch {
-    return NextResponse.json<HttpResponse<string>>(
-      { status: 500, message: 'เข้าสู่ระบบล้มเหลว' },
+    return NextResponse.json(
+      { status: 500, message: 'เกิดข้อผิดพลาดในการรีเฟรชโทเคน' },
       { status: 500 },
     );
   }

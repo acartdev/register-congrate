@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken';
 import { DecodedToken } from '@/model/auth.model';
+import { UserRole } from '@/model/user.model';
 
 const ACCESS_TOKEN_SECRET =
   process.env.ACCESS_TOKEN_SECRET ||
@@ -8,12 +9,18 @@ const REFRESH_TOKEN_SECRET =
   process.env.REFRESH_TOKEN_SECRET ||
   'f5f04c21846554182655821646d4d83490474dd0eb1509d9811c2feeb955d69a';
 
-export const generateAccessToken = (payload: any): string => {
-  return jwt.sign(payload, ACCESS_TOKEN_SECRET, { expiresIn: '15m' }); // 15 minutes
+export interface JWTPayload {
+  userID: string;
+  role: UserRole;
+  email: string;
+}
+
+export const generateAccessToken = (payload: JWTPayload): string => {
+  return jwt.sign(payload, ACCESS_TOKEN_SECRET, { expiresIn: '15m' });
 };
 
-export const generateRefreshToken = (payload: any): string => {
-  return jwt.sign(payload, REFRESH_TOKEN_SECRET, { expiresIn: '7d' }); // 7 days
+export const generateRefreshToken = (payload: JWTPayload): string => {
+  return jwt.sign(payload, REFRESH_TOKEN_SECRET, { expiresIn: '7d' });
 };
 
 export const verifyAccessToken = (token: string): DecodedToken | null => {
@@ -29,5 +36,15 @@ export const verifyRefreshToken = (token: string): DecodedToken | null => {
     return jwt.verify(token, REFRESH_TOKEN_SECRET) as DecodedToken;
   } catch (error) {
     return null;
+  }
+};
+
+export const isTokenExpired = (token: string): boolean => {
+  try {
+    const decoded = jwt.decode(token) as DecodedToken;
+    if (!decoded || !decoded.exp) return true;
+    return Date.now() >= decoded.exp * 1000;
+  } catch {
+    return true;
   }
 };

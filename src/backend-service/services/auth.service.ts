@@ -3,7 +3,12 @@ import { AuthRepository } from '../repository/auth.repository';
 import { PasswordForm, RegisterForm } from '@/model/form.model';
 import { isEmpty } from 'lodash';
 import { HttpResponse } from '@/model/http.model';
-import { generateAccessToken, generateRefreshToken } from '@/helper/jwt.helper';
+import {
+  generateAccessToken,
+  generateRefreshToken,
+  JWTPayload,
+  verifyRefreshToken,
+} from '@/helper/jwt.helper';
 import { AuthTokens } from '@/model/auth.model';
 import bcrypt from 'bcrypt';
 export class AuthService {
@@ -57,9 +62,9 @@ export class AuthService {
             error: 'Unauthorized',
           };
         }
-        const payload = {
+        const payload: JWTPayload = {
           userID: res.userID,
-          role: res.role,
+          role: res.role!,
           email: res.email,
         };
         const accessToken = generateAccessToken(payload);
@@ -82,6 +87,35 @@ export class AuthService {
       return {
         status: 500,
         message: 'เข้าสู่ระบบล้มเหลว เนื่องจากเกิดข้อผิดพลาด',
+        error: 'Internal Server Error',
+      };
+    }
+  }
+
+  async refreshToken(refreshToken: string): Promise<HttpResponse<AuthTokens>> {
+    try {
+      const payload = <JWTPayload>verifyRefreshToken(refreshToken);
+      if (!payload) {
+        return {
+          status: 401,
+          message: 'รีเฟรชโทเคนไม่ถูกต้อง',
+          error: 'Unauthorized',
+        };
+      }
+      const accessToken = generateAccessToken(payload);
+      const newRefreshToken = generateRefreshToken(payload);
+      return {
+        status: 200,
+        message: 'รีเฟรชโทเคนสำเร็จ',
+        data: {
+          accessToken,
+          refreshToken: newRefreshToken,
+        },
+      };
+    } catch {
+      return {
+        status: 500,
+        message: 'เกิดข้อผิดพลาดในการรีเฟรชโทเคน',
         error: 'Internal Server Error',
       };
     }
