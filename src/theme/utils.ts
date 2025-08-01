@@ -4,6 +4,8 @@ import { SxProps, Theme } from '@mui/material/styles';
 export const seconBackground: SxProps<Theme> = {
   borderTopRightRadius: 30,
   borderTopLeftRadius: 30,
+  borderBottomRightRadius: { sm: 0, md: 30 },
+  borderBottomLeftRadius: { sm: 0, md: 30 },
   boxShadow: '0 -1px 8px 0px rgba(0,0,0,0.3)',
 };
 export const backgroundLinear: SxProps<Theme> = {
@@ -12,6 +14,11 @@ export const backgroundLinear: SxProps<Theme> = {
 export const buttonBgLinear: SxProps<Theme> = {
   textShadow: '0 0px 8px 0px rgba(0,0,0,0.3)',
   background: `linear-gradient(to left, #6FD195 0%, #55C4AE 100%)`,
+};
+
+export const buttonBgErrorLinear: SxProps<Theme> = {
+  textShadow: '0 0px 8px 0px rgba(0,0,0,0.3)',
+  background: `linear-gradient(to left, #FF6B6B 0%, #FF4D4D 100%)`,
 };
 
 export const backgroundMenuLinear: SxProps<Theme> = {

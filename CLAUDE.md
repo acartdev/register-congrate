@@ -9,6 +9,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **Start production**: `npm start` - Starts production server
 - **Lint**: `npm run lint` - Runs ESLint with Next.js TypeScript rules
 - **Format**: `npm run format` - Formats code with Prettier
+- **Database Migration**: `npm run generate` - Runs Prisma migrations with init name
+- **Database Reset**: `npm run reset:schema` - Resets database schema (force, no seed)
 
 ## Project Architecture
 
@@ -30,6 +32,9 @@ This is a Next.js 15 React application for a graduation registration system ("à¸
 - **UI Library**: Material-UI v7 with custom theme
 - **Forms**: React Hook Form with Zod validation
 - **State**: Zustand for global state management
+- **Server State**: TanStack Query (React Query) for API state management
+- **Database**: Prisma ORM with PostgreSQL (Docker Compose setup)
+- **API**: Next.js API routes with Axios for HTTP client
 - **Styling**: Material-UI emotion-based styling
 - **Charts**: ApexCharts for data visualization
 - **Date Handling**: Day.js with MUI date pickers
@@ -45,6 +50,11 @@ This is a Next.js 15 React application for a graduation registration system ("à¸
 - `src/data/` - Mock data and static data
 - `src/helper/` - Utility functions
 - `src/theme/` - Material-UI theme configuration
+- `src/backend-service/` - Server-side business logic
+  - `repository/` - Data access layer with Prisma
+  - `services/` - Business logic and authentication services
+- `src/providers/` - React context providers (Query, Theme)
+- `src/hook/` - Custom React hooks
 
 ### User Roles and Permissions
 
@@ -61,3 +71,19 @@ The application has role-based access with UserRole (ADMIN, STUDENT, TEACHER) an
 - Menu management store handles dropdown menus and user selection
 - Snackbar store manages global notifications
 - Form state managed with React Hook Form and Zod validation
+- TanStack Query handles server state with 3 retries, no window focus refetch
+
+### Authentication & Security
+
+- JWT-based authentication with server-side validation
+- Cookie-based session management via helper functions
+- Role-based access control with middleware protection
+- Zod schema validation for all forms with Thai language error messages
+
+### Database & API Architecture
+
+- **Repository Pattern**: Data access abstracted through repository layer
+- **Service Layer**: Business logic separated from API routes
+- **API Routes**: RESTful endpoints in `src/app/api/` directory
+- **Prisma Integration**: Generated client in `src/generated/prisma/`
+- **Environment**: PostgreSQL with Docker Compose for local development

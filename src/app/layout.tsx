@@ -3,6 +3,7 @@ import { Kanit } from 'next/font/google';
 import './globals.css';
 import { ThemeProvider } from '@mui/material';
 import theme from '@/theme/theme';
+import Providers from '@/providers/query.provider';
 
 const kanit = Kanit({
   weight: '400',
@@ -27,7 +28,9 @@ export default function RootLayout({
   return (
     <html lang='en'>
       <body className={kanit.variable}>
-        <ThemeProvider theme={theme}>{children}</ThemeProvider>
+        <ThemeProvider theme={theme}>
+          <Providers>{children}</Providers>
+        </ThemeProvider>
       </body>
     </html>
   );
