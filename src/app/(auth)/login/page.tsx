@@ -9,21 +9,33 @@ import {
 import { Box, Button, Stack, TextField, Typography } from '@mui/material';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useState } from 'react';
-import { SubmitHandler, useForm } from 'react-hook-form';
+import { useState, useEffect } from 'react';
+import { useForm } from 'react-hook-form';
+import { useSearchParams } from 'next/navigation';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { LoginForm } from '@/model/form.model';
 import { LoginSchemaModel } from '@/schema/form.schema';
-import { useLogin } from '@/hook/auth.hook';
+
 import ErrorDialog from '@/components/dialog/Error-Dialog.component';
 import LoadingComponent from '@/components/Loading.component';
-import { AxiosError } from 'axios';
-import { HttpResponse } from '@/model/http.model';
+import { signIn } from 'next-auth/react';
+import z from 'zod';
 
 export default function LoginPage() {
+  const searchParams = useSearchParams();
   const [openDialog, setOpenDialog] = useState(false);
   const [errorMessage, setErrorMessage] = useState('กรุณาลองใหม่อีกครั้ง');
-  
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const error = searchParams.get('error');
+    if (error) {
+      setErrorMessage(decodeURIComponent(error));
+      setOpenDialog(true);
+      // Clear the error from URL
+      window.history.replaceState({}, '', '/login');
+    }
+  }, [searchParams]);
   const {
     register,
     handleSubmit,
@@ -36,21 +48,24 @@ export default function LoginPage() {
     },
   });
 
-  const loginMutation = useLogin();
-
-  const onSubmit: SubmitHandler<LoginForm> = (data) => {
+  const onSubmit = async (values: z.infer<typeof LoginSchemaModel>) => {
     if (isValid) {
-      loginMutation.mutate(data, {
-        onError: (err) => {
-          if (err instanceof Error) {
-            const error = err as AxiosError<HttpResponse<string>>;
-            setErrorMessage(error.response?.data?.message || 'เข้าสู่ระบบล้มเหลว');
-          } else {
-            setErrorMessage('เข้าสู่ระบบล้มเหลว');
-          }
+      setLoading(true);
+      try {
+        const result = await signIn('credentials', {
+          redirect: false,
+          userID: values.userID,
+          password: values.password,
+        });
+        console.log(result);
+
+        if (result?.error) {
+          setErrorMessage(result.code as string);
           setOpenDialog(true);
-        },
-      });
+        }
+      } finally {
+        setLoading(false);
+      }
     }
   };
 
@@ -84,7 +99,7 @@ export default function LoginPage() {
       >
         <BubbleComponent />
 
-        <LoadingComponent open={loginMutation.isPending} />
+        <LoadingComponent open={loading} />
         <Stack
           height={{ xs: '100%', lg: '80%' }}
           width={{ xs: '100%', lg: '20%' }}

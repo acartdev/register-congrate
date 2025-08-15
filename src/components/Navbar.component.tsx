@@ -5,7 +5,7 @@ import Image from 'next/image';
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
 import { useState } from 'react';
 import LoginIcon from '@mui/icons-material/Login';
-import { useLogout } from '@/hook/auth.hook';
+import { signOut } from 'next-auth/react';
 export default function NavbarComponent({
   openMenu,
 }: {
@@ -20,10 +20,9 @@ export default function NavbarComponent({
   const handleClose = () => {
     setAnchorEl(undefined);
   };
-  const logoutMutation = useLogout();
 
-  const handleLogout = () => {
-    logoutMutation.mutate();
+  const handleLogout = async () => {
+    await signOut();
   };
 
   return (

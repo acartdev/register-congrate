@@ -7,7 +7,6 @@ import { Box, Container } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { useAuth } from '@/hook/auth.hook';
 import { useUserStore } from '@/_store/userStore';
 import { User } from '@/model/user.model';
 
@@ -21,12 +20,7 @@ export default function MainLayout({
     setOpen(false);
   };
   const { setUser } = useUserStore();
-  const { user } = useAuth();
-  useEffect(() => {
-    if (user) {
-      setUser(user as User);
-    }
-  }, [user, setUser]);
+
   const { isSnackOpen, data, onCloseSnack } = useSnackStore();
   return (
     <>
