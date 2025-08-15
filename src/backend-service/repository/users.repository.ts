@@ -21,4 +21,26 @@ export class UsersRepository {
       await client.$disconnect();
     }
   }
+
+  async verifyUser(email: string, uuid: string): Promise<HttpResponse<string>> {
+    const client = new PrismaClient();
+    try {
+      const user = await client.users.update({
+        where: { email, uuid },
+        data: { isVerified: true },
+      });
+      if (!user) {
+        return { message: 'ไม่พบผู้ใช้', status: 404 };
+      }
+      return {
+        data: user.uuid!,
+        message: 'ยืนยันผู้ใช้สำเร็จ กรุณาเข้าสู่ระบบ',
+        status: 200,
+      };
+    } catch {
+      return { message: 'เกิดข้อผิดพลาดในการตรวจสอบผู้ใช้', status: 500 };
+    } finally {
+      await client.$disconnect();
+    }
+  }
 }

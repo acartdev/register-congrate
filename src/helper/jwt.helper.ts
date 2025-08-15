@@ -1,6 +1,5 @@
 import jwt from 'jsonwebtoken';
 import { DecodedToken } from '@/model/auth.model';
-import { UserRole } from '@/model/user.model';
 
 const ACCESS_TOKEN_SECRET =
   process.env.ACCESS_TOKEN_SECRET ||
@@ -11,7 +10,6 @@ const REFRESH_TOKEN_SECRET =
 
 export interface JWTPayload {
   userID: string;
-  role: UserRole;
   email: string;
 }
 

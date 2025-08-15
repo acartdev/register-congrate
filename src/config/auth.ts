@@ -49,6 +49,9 @@ export const authOptions: NextAuthConfig = {
             mapUser.password,
           );
           if (comparePassword) {
+            if (!mapUser.isVerified) {
+              throw new CustomError(AuthErrorCode.USER_NOT_VERIFIED);
+            }
             return {
               id: String(mapUser.uuid),
               name: mapUser.firstName + ' ' + mapUser.lastName,

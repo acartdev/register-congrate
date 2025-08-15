@@ -4,11 +4,15 @@ import { RegisterForm } from '@/model/form.model';
 export class AuthRepository {
   async register(
     register: RegisterForm & { password: string },
-  ): Promise<Users | null> {
+  ): Promise<{ uuid: string | null; email: string } | null> {
     const client = new PrismaClient();
     try {
       const user = await client.users.create({
         data: register,
+        select: {
+          uuid: true,
+          email: true,
+        },
       });
       return user;
     } catch (error) {

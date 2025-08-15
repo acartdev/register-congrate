@@ -4,6 +4,9 @@ import { PasswordForm, RegisterForm } from '@/model/form.model';
 import { HttpResponse } from '@/model/http.model';
 import bcrypt from 'bcrypt';
 import { Users } from '@/generated/prisma';
+import nodemailer from 'nodemailer';
+import { Jwt } from 'jsonwebtoken';
+import { generateRefreshToken } from '@/helper/jwt.helper';
 export class AuthService {
   private authRepository: AuthRepository;
   constructor() {
@@ -31,7 +34,25 @@ export class AuthService {
     const { confirmPassword, ...userData } = register;
     const salt = await bcrypt.genSalt(10);
     userData.password = await bcrypt.hash(userData.password, salt);
-    await this.authRepository.register(userData);
+    const res = await this.authRepository.register(userData);
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: process.env.EMAIL_TRANSPORTER,
+        pass: process.env.EMAIL_TRANSPORTER_PASSWORD,
+      },
+    });
+    const verificationToken = generateRefreshToken({
+      email: res!.email,
+      userID: res!.uuid!,
+    });
+    const mailOptions = {
+      from: process.env.EMAIL_TRANSPORTER,
+      to: userData.email,
+      subject: 'ยืนยันอีเมลของคุณ',
+      html: `<p>กรุณาคลิกลิงก์นี้เพื่อยืนยันอีเมล: <a href="http://localhost:3000/api/verify?token=${verificationToken}">ยืนยันอีเมล</a></p>`,
+    };
+    await transporter.sendMail(mailOptions);
     return {
       status: 200,
       message: 'ลงทะเบียนสำเร็จ',

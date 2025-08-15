@@ -31,6 +31,7 @@ export interface RegisterForm {
   phone?: string;
   role: UserRole;
   permit: Permission;
+  isVerified?: boolean;
 }
 
 export interface PasswordForm {

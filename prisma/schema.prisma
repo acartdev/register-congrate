@@ -30,7 +30,7 @@ model Users {
   updated_at  DateTime    @updatedAt
   department  String?
   password    String
-
+  isVerified  Boolean     @default(false)
   activities   Activity[]
 }
 
