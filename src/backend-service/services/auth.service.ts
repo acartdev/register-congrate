@@ -49,8 +49,42 @@ export class AuthService {
     const mailOptions = {
       from: process.env.EMAIL_TRANSPORTER,
       to: userData.email,
-      subject: 'ยืนยันอีเมลของคุณ',
-      html: `<p>กรุณาคลิกลิงก์นี้เพื่อยืนยันอีเมล: <a href="http://localhost:3000/api/verify?token=${verificationToken}">ยืนยันอีเมล</a></p>`,
+      subject: 'ยืนยันอีเมลของคุณ - ลงทะเบียนรับปริญญา',
+      html: `
+        <div style="font-family: 'Kanit', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: linear-gradient(to bottom, #00e676 5%, #69f0ae 40%, #ffffff 100%); border-radius: 15px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
+          <div style="text-align: center; padding: 40px 20px 20px; background: linear-gradient(to bottom, #00e676, #69f0ae);">
+            <h1 style="color: white; font-size: 24px; font-weight: 700; margin: 0; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">ระบบลงทะเบียนรับปริญญา</h1>
+            <p style="color: white; font-size: 16px; margin: 10px 0 0; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">การยืนยันอีเมล</p>
+          </div>
+          
+          <div style="padding: 40px 30px; background: white;">
+            <div style="text-align: center; margin-bottom: 30px;">
+              <div style="width:80px;height:80px;background:#4caf50;border-radius:50%;margin:0 auto 20px;display:flex;align-items:center;justify-content:center;">
+                <span style="color: white; font-size: 60px; font-weight: bold;width:100%;">✓</span>
+              </div>
+              <h2 style="color: #3e4850; font-size: 22px; font-weight: 700; margin: 0 0 15px;">ยืนยันอีเมลของคุณ</h2>
+              <p style="color: #666; font-size: 16px; line-height: 1.6; margin: 0;">
+                เรายินดีต้อนรับคุณเข้าสู่ระบบลงทะเบียนรับปริญญา<br>
+                กรุณาคลิกปุ่มด้านล่างเพื่อยืนยันอีเมลของคุณ
+              </p>
+            </div>
+            
+            <div style="text-align: center; margin: 30px 0;">
+              <a href="http://localhost:3000/api/verify?token=${verificationToken}" 
+                 style="display: inline-block; background: linear-gradient(to left, #6FD195 0%, #55C4AE 100%); color: white; text-decoration: none; padding: 14px 30px; border-radius: 8px; font-weight: 600; font-size: 16px; text-shadow: 0 2px 4px rgba(0,0,0,0.3); transition: transform 0.2s;">
+                ยืนยันอีเมล
+              </a>
+            </div>
+            
+            <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee;">
+              <p style="color: #999; font-size: 14px; margin: 0;">
+                หากคุณไม่ได้สมัครสมาชิก กรุณาเพิกเฉยต่ออีเมลนี้<br>
+                หากมีปัญหา กรุณาติดต่อฝ่ายสนับสนุน
+              </p>
+            </div>
+          </div>
+        </div>
+      `,
     };
     await transporter.sendMail(mailOptions);
     return {

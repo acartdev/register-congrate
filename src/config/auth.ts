@@ -4,6 +4,7 @@ import Credentials from 'next-auth/providers/credentials';
 import { PrismaAdapter } from '@auth/prisma-adapter';
 import { isEmpty } from 'lodash';
 import { AuthErrorCode } from '@/model/http.model';
+import { NextResponse } from 'next/server';
 const client = new PrismaClient();
 class CustomError extends CredentialsSignin {
   code: AuthErrorCode = AuthErrorCode.INVALID_CREDENTIALS;
@@ -83,6 +84,11 @@ export const authOptions: NextAuthConfig = {
       }
       if (!isLogin) {
         return false;
+      }
+      if (isLogin && nextUrl.pathname.startsWith('/login')) {
+        return NextResponse.redirect(
+          `${process.env.NEXT_PUBLIC_FRONTEND_URL}/` as string,
+        );
       }
       return true;
     },
