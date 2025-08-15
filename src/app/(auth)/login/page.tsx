@@ -11,7 +11,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import { useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { LoginForm } from '@/model/form.model';
 import { LoginSchemaModel } from '@/schema/form.schema';
@@ -20,13 +20,14 @@ import ErrorDialog from '@/components/dialog/Error-Dialog.component';
 import LoadingComponent from '@/components/Loading.component';
 import { signIn } from 'next-auth/react';
 import z from 'zod';
+import { isEmpty } from 'lodash';
 
 export default function LoginPage() {
   const searchParams = useSearchParams();
   const [openDialog, setOpenDialog] = useState(false);
   const [errorMessage, setErrorMessage] = useState('กรุณาลองใหม่อีกครั้ง');
   const [loading, setLoading] = useState(false);
-
+  const router = useRouter();
   useEffect(() => {
     const error = searchParams.get('error');
     if (error) {
@@ -57,11 +58,13 @@ export default function LoginPage() {
           userID: values.userID,
           password: values.password,
         });
-        console.log(result);
-
         if (result?.error) {
           setErrorMessage(result.code as string);
           setOpenDialog(true);
+        } else {
+          if (result?.status === 200 && !isEmpty(result.url)) {
+            router.replace('/');
+          }
         }
       } finally {
         setLoading(false);

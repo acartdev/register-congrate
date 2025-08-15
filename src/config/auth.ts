@@ -1,8 +1,6 @@
-// auth.ts
 import { PrismaClient } from '@/generated/prisma';
 import NextAuth, { CredentialsSignin, NextAuthConfig } from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
-import bcrypt from 'bcrypt';
 import { PrismaAdapter } from '@auth/prisma-adapter';
 import { isEmpty } from 'lodash';
 import { AuthErrorCode } from '@/model/http.model';
@@ -44,6 +42,8 @@ export const authOptions: NextAuthConfig = {
         }
 
         if (credentials?.password) {
+          // Import bcrypt dynamically to avoid Edge Runtime issues
+          const bcrypt = await import('bcrypt');
           const comparePassword = await bcrypt.compare(
             credentials.password as string,
             mapUser.password,
@@ -73,9 +73,10 @@ export const authOptions: NextAuthConfig = {
       if (!user) return false;
       return true;
     },
-    async authorized({ auth }) {
-      if (!auth) {
-        throw new Error('Not authorized');
+    async authorized({ auth, request: { nextUrl, headers, method } }) {
+      const isLogin = !!auth?.user;
+      if (!isLogin) {
+        return false;
       }
       return true;
     },
@@ -92,7 +93,10 @@ export const authOptions: NextAuthConfig = {
       return session;
     },
   },
-
+  pages: {
+    signIn: '/login',
+    signOut: '/login',
+  },
   secret: process.env.NEXTAUTH_SECRET,
 };
 const handler = NextAuth(authOptions);
