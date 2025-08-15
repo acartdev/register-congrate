@@ -7,12 +7,9 @@ import { Box, Button, Divider, Stack, Typography } from '@mui/material';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useEffect, useState } from 'react';
 import { useSnackStore } from '@/_store/snackStore';
-import { Permission, User, UserRole } from '@/model/user.model';
+import { Permission, UserRole } from '@/model/user.model';
 import LoadingComponent from '@/components/Loading.component';
-import { useAuth } from '@/hook/auth.hook';
 import { useUpdateUser } from '@/hook/user.hook';
-import { HttpResponse } from '@/model/http.model';
-import { AxiosError } from 'axios';
 import { useUserStore } from '@/_store/userStore';
 
 export default function Homepage() {
@@ -83,11 +80,10 @@ export default function Homepage() {
           setIsEdit(false);
         },
         onError: (error) => {
-          const err = error as AxiosError<HttpResponse<string>>;
+          const err = error;
           updateSnackContent({
             status: 'error',
-            title:
-              err.response?.data?.message || 'เกิดข้อผิดพลาดในการแก้ไขข้อมูล',
+            title: err.message,
           });
           onOpenSnack();
         },

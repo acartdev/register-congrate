@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { useUserStore } from '@/_store/userStore';
-import { User } from '@/model/user.model';
+import { useGetMe } from '@/hook/user.hook';
 
 export default function MainLayout({
   children,
@@ -19,8 +19,13 @@ export default function MainLayout({
   const handleClose = () => {
     setOpen(false);
   };
+  const { data: userData, isPending } = useGetMe();
   const { setUser } = useUserStore();
-
+  useEffect(() => {
+    if (!isPending) {
+      setUser(userData?.data ?? null);
+    }
+  }, [userData?.data, isPending]);
   const { isSnackOpen, data, onCloseSnack } = useSnackStore();
   return (
     <>

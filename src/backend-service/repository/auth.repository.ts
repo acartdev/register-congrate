@@ -21,7 +21,7 @@ export class AuthRepository {
     const client = new PrismaClient();
     try {
       const user = await client.users.findUnique({
-        where: { userID },
+        where: { uuid: userID },
       });
       return user;
     } catch {
