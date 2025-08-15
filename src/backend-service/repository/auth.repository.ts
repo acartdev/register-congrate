@@ -42,6 +42,8 @@ export class AuthRepository {
           OR: [
             {
               userID: register.userID,
+            },
+            {
               email: register.email,
             },
           ],

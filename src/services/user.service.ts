@@ -22,4 +22,16 @@ export class UserService {
     const data = result.json();
     return data;
   }
+  async createUser(user: RegisterForm): Promise<HttpResponse<string>> {
+    const result = await fetch('/api/auth/register', {
+      method: 'POST',
+      credentials: 'same-origin',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(user),
+    });
+    const data = result.json();
+    return data;
+  }
 }

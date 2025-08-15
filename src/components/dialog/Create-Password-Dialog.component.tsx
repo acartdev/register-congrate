@@ -6,11 +6,9 @@ import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { PasswordSchema } from '@/schema/form.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useRegister } from '@/hook/auth.hook';
 import SuccessDialog from './Success-Dialog.component';
 import ErrorDialog from './Error-Dialog.component';
-import { AxiosError } from 'axios';
-import { HttpResponse } from '@/model/http.model';
+import { useRegister } from '@/hook/auth.hook';
 
 export default function CreatePasswordDialog({
   open,
@@ -41,13 +39,17 @@ export default function CreatePasswordDialog({
         onSuccess: (data) => {
           if (data.status === 200) {
             setEmailSentOpen(true);
+            formControl.reset();
+            setOpenSuccess(true);
+          } else {
+            setErrorMessage(data.message || 'เกิดข้อผิดพลาด');
+            setOpenDialog(true);
           }
-          formControl.reset();
-          setOpenSuccess(true);
         },
         onError: (error) => {
-          const err = error as AxiosError<HttpResponse<string>>;
-          setErrorMessage(err.response?.data?.message || 'เกิดข้อผิดพลาด');
+          const err = error;
+
+          setErrorMessage(err.message || 'เกิดข้อผิดพลาด');
           setOpenDialog(true);
         },
       },

@@ -5,6 +5,7 @@ import { Alert, Snackbar } from '@mui/material';
 export default function SnackBarComponent({
   title,
   status,
+  description,
   open,
   onClose,
 }: ModalAction) {
@@ -25,6 +26,7 @@ export default function SnackBarComponent({
         sx={{ width: '100%' }}
       >
         {title}
+        {description ? <span>:{description}</span> : ''}
       </Alert>
     </Snackbar>
   );

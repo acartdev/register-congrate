@@ -78,6 +78,9 @@ export const authOptions: NextAuthConfig = {
     },
     async authorized({ auth, request: { nextUrl, headers, method } }) {
       const isLogin = !!auth?.user;
+      if (nextUrl.pathname.startsWith('/register')) {
+        return true;
+      }
       if (!isLogin) {
         return false;
       }

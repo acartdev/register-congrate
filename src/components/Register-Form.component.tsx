@@ -29,8 +29,8 @@ export default function RegisterFormComponent({
         size='small'
         slotProps={{
           input: {
-            readOnly: !isEmpty(getValues('userID')),
-            disabled: !isEmpty(getValues('userID')),
+            readOnly: !isEmpty(getValues('userID')) && isReadOnly,
+            disabled: !isEmpty(getValues('userID')) && isReadOnly,
           },
           htmlInput: {
             inputMode: 'numeric',

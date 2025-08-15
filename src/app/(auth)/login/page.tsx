@@ -21,21 +21,44 @@ import LoadingComponent from '@/components/Loading.component';
 import { signIn } from 'next-auth/react';
 import z from 'zod';
 import { isEmpty } from 'lodash';
+import { useSnackStore } from '@/_store/snackStore';
 
 export default function LoginPage() {
   const searchParams = useSearchParams();
   const [openDialog, setOpenDialog] = useState(false);
   const [errorMessage, setErrorMessage] = useState('กรุณาลองใหม่อีกครั้ง');
-  const [loading, setLoading] = useState(false);
+  const { onOpenSnack, updateSnackContent } = useSnackStore();
+
+  const [loading, setLoading] = useState(true);
   const router = useRouter();
   useEffect(() => {
     const error = searchParams.get('error');
+    const verified = searchParams.get('verified');
+
     if (error) {
       setErrorMessage(decodeURIComponent(error));
       setOpenDialog(true);
       // Clear the error from URL
       window.history.replaceState({}, '', '/login');
     }
+    if (verified) {
+      if (verified === 'true') {
+        updateSnackContent({
+          title: 'ยืนยันตัวตนสำเร็จ',
+          description: 'คุณได้ยืนยันตัวตนเรียบร้อยแล้ว กรุณาเข้าสู่ระบบ',
+          status: 'success',
+        });
+        onOpenSnack();
+      } else {
+        updateSnackContent({
+          title: 'เกิดข้อผิดพลาดในการยืนยันตัวตน',
+          description: 'กรุณาลองใหม่อีกครั้ง',
+          status: 'error',
+        });
+        onOpenSnack();
+      }
+    }
+    setLoading(false);
   }, [searchParams]);
   const {
     register,

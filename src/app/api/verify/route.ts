@@ -7,7 +7,9 @@ export const GET = async (request: NextRequest) => {
     const searchParams = request.nextUrl.searchParams;
     const verificationToken = searchParams.get('token') as string;
     const result = await userService.verifyUser(verificationToken);
-    return NextResponse.json(result, { status: result.status });
+    return NextResponse.redirect(
+      `${process.env.NEXT_PUBLIC_FRONTEND_URL}/login?verified=${result.status === 200}` as string,
+    );
   } catch (error) {
     console.error(error);
     return NextResponse.json(
