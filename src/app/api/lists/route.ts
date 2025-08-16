@@ -23,3 +23,21 @@ export const GET = async (request: NextRequest) => {
     return NextResponse.json({ message: 'เกิดข้อผิดพลาด' }, { status: 500 });
   }
 };
+
+export const POST = async (request: NextRequest) => {
+  try {
+    const listService = new ListService();
+    const data = await request.json();
+    const session = await auth();
+    if (
+      session?.user.role !== UserRole.ADMIN &&
+      session?.user.role !== UserRole.TEACHER
+    ) {
+      data.creatorID = +session!.user.id;
+    }
+    const response = await listService.createList(data, +session!.user.id);
+    return NextResponse.json(response, { status: response.status });
+  } catch {
+    return NextResponse.json({ message: 'เกิดข้อผิดพลาด' }, { status: 500 });
+  }
+};

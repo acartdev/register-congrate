@@ -61,7 +61,6 @@ export default function QRCodePage() {
     try {
       if (isEditMode) {
         // TODO: Update existing QR code
-        console.log('Updating QR code:', { id: params.slug, data });
 
         // Simulate API call
         await new Promise((resolve) => setTimeout(resolve, 1000));

@@ -1,3 +1,4 @@
+import { QRCodeFormData } from '@/schemas/form.schema';
 import { ListsRepository } from '../repository/lists.repository';
 
 export class ListService {
@@ -13,5 +14,9 @@ export class ListService {
     } else {
       return await this.listsRepository.findAll(search);
     }
+  }
+
+  async createList(data: QRCodeFormData, userID: number) {
+    return await this.listsRepository.create(data, userID);
   }
 }

@@ -1,5 +1,6 @@
 import { Activity, PrismaClient, RegisterActivity } from '@/generated/prisma';
 import { HttpResponse } from '@/model/http.model';
+import { QRCodeFormData } from '@/schemas/form.schema';
 
 export class ListsRepository {
   async findAll(search: string): Promise<HttpResponse<Activity[]>> {
@@ -54,8 +55,31 @@ export class ListsRepository {
         },
       });
       return { data: activities, status: 200 };
-    } catch (err) {
+    } catch {
       return { message: 'เกิดข้อผิดพลาดในการค้นหากิจกรรม', status: 500 };
+    } finally {
+      await client.$disconnect();
+    }
+  }
+
+  async create(
+    data: QRCodeFormData,
+    userID: number,
+  ): Promise<HttpResponse<Activity>> {
+    const client = new PrismaClient();
+    try {
+      const activity = await client.activity.create({
+        data: {
+          name: data.name,
+          description: data.description,
+          created_at: new Date(),
+          user_id: userID,
+          attachment: data.attachment as string,
+        },
+      });
+      return { data: activity, status: 201 };
+    } catch {
+      return { message: 'เกิดข้อผิดพลาดในการสร้างกิจกรรม', status: 500 };
     } finally {
       await client.$disconnect();
     }

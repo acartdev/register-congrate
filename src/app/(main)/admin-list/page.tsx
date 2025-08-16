@@ -6,6 +6,7 @@ import { TableHeadModel } from '@/model/form.model';
 import {
   Box,
   Button,
+  CircularProgress,
   Divider,
   Grid,
   IconButton,
@@ -15,21 +16,29 @@ import {
 } from '@mui/material';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import SearchComponent from '@/components/Search.component';
 import { buttonBgLinear } from '@/theme/utils';
 import Link from 'next/link';
 import MenuManageComponent from '@/components/MenuManage.component';
-import { User } from '@/model/user.model';
+import { Department, User, UserRole } from '@/model/user.model';
+import { useUserStore } from '@/_store/userStore';
+import { useGetUsersFilter } from '@/hook/user.hook';
 export default function AdminListPage() {
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement>();
   const [selected, setSelected] = useState<User>(mockUser);
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
+
   const open = Boolean(anchorEl);
   const handleClick = (
     event: React.MouseEvent<HTMLButtonElement>,
-    user: User,
+    user: Omit<User, 'department'> & { department: Department | null },
   ) => {
-    setSelected(user);
+    setSelected({
+      ...user,
+      department: user.department?.name ?? undefined,
+    });
     setAnchorEl(event.currentTarget);
   };
   const handleClose = () => {
@@ -43,6 +52,23 @@ export default function AdminListPage() {
     { value: 'สมัครเมื่อ', align: 'center' },
     { value: 'จัดการ' },
   ];
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm);
+    }, 300);
+
+    return () => {
+      clearTimeout(timeoutId);
+    };
+  }, [searchTerm]);
+  const { data: listData, isLoading } = useGetUsersFilter(
+    debouncedSearchTerm,
+    UserRole.ADMIN,
+    undefined,
+  );
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
+  };
   return (
     <Box>
       <Typography fontSize={18}>รายชื่อผู้ดูแลระบบ</Typography>
@@ -72,11 +98,28 @@ export default function AdminListPage() {
           </Button>
         </Grid>
         <Grid size={7.5}>
-          <SearchComponent placholder='ค้นหาชื่อหรือรหัส' />
+          <SearchComponent
+            handleChange={handleChange}
+            placholder='ค้นหาชื่อหรือรหัส'
+          />
         </Grid>
       </Grid>
       <TableListComponent heads={headers}>
-        {mockUsers.map((list, key) => (
+        {isLoading && (
+          <TableRow>
+            <TableCell colSpan={4} align='center'>
+              <CircularProgress size={24} />
+            </TableCell>
+          </TableRow>
+        )}
+        {!listData?.data?.length && !isLoading && (
+          <TableRow>
+            <TableCell colSpan={4} align='center'>
+              <Typography color='textSecondary'>ไม่พบข้อมูล</Typography>
+            </TableCell>
+          </TableRow>
+        )}
+        {listData?.data?.map((list, key) => (
           <TableRow
             key={key}
             sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
@@ -109,7 +152,16 @@ export default function AdminListPage() {
               </Typography>
             </TableCell>
             <TableCell style={{ padding: '5px 9px' }} align='right'>
-              <IconButton onClick={(e) => handleClick(e, list)}>
+              <IconButton
+                onClick={(e) =>
+                  handleClick(
+                    e,
+                    list as Omit<User, 'department'> & {
+                      department: Department | null;
+                    },
+                  )
+                }
+              >
                 <MoreHorizIcon />
               </IconButton>
             </TableCell>

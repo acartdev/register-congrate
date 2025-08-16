@@ -177,14 +177,14 @@ export default function TeacherListPage() {
         ))}
         {isLoading && (
           <TableRow>
-            <TableCell colSpan={4} align='center'>
+            <TableCell colSpan={5} align='center'>
               <CircularProgress size={24} />
             </TableCell>
           </TableRow>
         )}
         {!listData?.data?.length && !isLoading && (
           <TableRow>
-            <TableCell colSpan={4} align='center'>
+            <TableCell colSpan={5} align='center'>
               <Typography color='textSecondary'>ไม่พบข้อมูล</Typography>
             </TableCell>
           </TableRow>
