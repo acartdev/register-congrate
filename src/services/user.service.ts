@@ -49,13 +49,14 @@ export class UserService {
     role: UserRole,
     deptID: number | undefined,
   ): Promise<HttpResponse<Array<Users & { department: Department | null }>>> {
-    const result = await fetch(
-      `/api/users?role=${role}&q=${searchTerm}&deptID=${deptID}`,
-      {
-        method: 'GET',
-        credentials: 'same-origin',
-      },
-    );
+    let query = `/api/users?role=${role}&q=${searchTerm}`;
+    if (deptID) {
+      query += `&deptID=${deptID}`;
+    }
+    const result = await fetch(query, {
+      method: 'GET',
+      credentials: 'same-origin',
+    });
     const data = result.json();
     return data;
   }

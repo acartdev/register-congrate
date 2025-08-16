@@ -58,6 +58,7 @@ export class UsersRepository {
   async getUsersFilter(
     searchTerm: string,
     role: UserRole,
+    deptID: string | undefined,
   ): Promise<HttpResponse<Array<Users & { department: Department | null }>>> {
     const client = new PrismaClient();
     try {
@@ -67,12 +68,16 @@ export class UsersRepository {
       } else {
         return { message: 'กรุณาเลือกบทบาทผู้ใช้', status: 400 };
       }
+      if (deptID) {
+        Object.assign(query, { deptID: +deptID });
+      }
       if (searchTerm.trim() !== '') {
         Object.assign(query, {
           OR: [
             { firstName: { contains: searchTerm } },
             { lastName: { contains: searchTerm } },
             { email: { contains: searchTerm } },
+            { userID: { contains: searchTerm } },
           ],
         });
       }

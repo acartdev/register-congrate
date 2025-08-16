@@ -24,8 +24,9 @@ export class UsersService {
   async getUsersFilter(
     searchTerm: string,
     role: UserRole,
+    deptID: string | undefined,
   ): Promise<HttpResponse<Users[]>> {
     const usersRepository = new UsersRepository();
-    return usersRepository.getUsersFilter(searchTerm, role);
+    return usersRepository.getUsersFilter(searchTerm, role, deptID);
   }
 }

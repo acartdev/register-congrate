@@ -13,7 +13,7 @@ export const GET = async (request: NextRequest) => {
       session?.user.role !== UserRole.ADMIN &&
       session?.user.role !== UserRole.TEACHER
     ) {
-      const result = await listService.getLists(search);
+      const result = await listService.getLists(search, +session!.user.id);
       return NextResponse.json(result, { status: result.status });
     } else {
       const result = await listService.getLists(search);

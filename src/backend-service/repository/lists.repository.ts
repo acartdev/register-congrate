@@ -32,8 +32,8 @@ export class ListsRepository {
       if (search.trim() !== '') {
         Object.assign(query, {
           OR: [
-            { name: { contains: search } },
-            { description: { contains: search } },
+            { activity: { name: { contains: search } } },
+            { activity: { description: { contains: search } } },
           ],
         });
       }
@@ -46,10 +46,15 @@ export class ListsRepository {
         where: query,
         include: {
           activity: true,
+          users: {
+            select: {
+              id: true,
+            },
+          },
         },
       });
       return { data: activities, status: 200 };
-    } catch {
+    } catch (err) {
       return { message: 'เกิดข้อผิดพลาดในการค้นหากิจกรรม', status: 500 };
     } finally {
       await client.$disconnect();
