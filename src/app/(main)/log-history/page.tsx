@@ -1,14 +1,12 @@
-import SearchComponent from '@/components/Search.component';
+'use client';
 import TableListComponent from '@/components/TableList.component';
-import { listMock, mockLog } from '@/data/mock';
 import { formatDate } from '@/helper/table.helper';
+import { useGetLogs } from '@/hook/logs.hook';
 import { TableHeadModel } from '@/model/form.model';
 import {
   Box,
-  Button,
+  CircularProgress,
   Divider,
-  Grid,
-  Pagination,
   TableCell,
   TableRow,
   Typography,
@@ -22,14 +20,29 @@ export default function LogHistoryPage() {
     { value: 'วิธีการ', align: 'left' },
     { value: 'รายการ', align: 'center' },
     { value: 'เมื่อ' },
-    { value: 'ผู้ใช้' },
   ];
+  const { data: logData, isLoading } = useGetLogs();
+
   return (
     <Box>
       <Typography fontSize={18}>ประวัติการดำเนินการ</Typography>
       <Divider sx={{ marginBottom: 2 }} />
       <TableListComponent heads={headers}>
-        {mockLog.map((list, key) => (
+        {isLoading && (
+          <TableRow>
+            <TableCell colSpan={5} align='center'>
+              <CircularProgress size={24} />
+            </TableCell>
+          </TableRow>
+        )}
+        {!logData?.length && !isLoading && (
+          <TableRow>
+            <TableCell colSpan={5} align='center'>
+              <Typography color='textSecondary'>ไม่พบข้อมูล</Typography>
+            </TableCell>
+          </TableRow>
+        )}
+        {logData?.map((list, key) => (
           <TableRow
             key={key}
             sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
@@ -59,11 +72,6 @@ export default function LogHistoryPage() {
             <TableCell style={{ padding: '5px 9px' }} align='right'>
               <Typography fontSize={12}>
                 {formatDate(list.created_at)}
-              </Typography>
-            </TableCell>
-            <TableCell style={{ padding: '5px 9px' }} align='right'>
-              <Typography flexWrap={'wrap'} fontSize={12}>
-                {list.user.role}
               </Typography>
             </TableCell>
           </TableRow>

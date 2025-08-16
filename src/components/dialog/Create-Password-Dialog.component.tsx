@@ -9,6 +9,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import SuccessDialog from './Success-Dialog.component';
 import ErrorDialog from './Error-Dialog.component';
 import { useRegister } from '@/hook/auth.hook';
+import LoadingComponent from '../Loading.component';
 
 export default function CreatePasswordDialog({
   open,
@@ -30,7 +31,7 @@ export default function CreatePasswordDialog({
     handleSubmit,
     formState: { isValid },
   } = formControl;
-  const { mutate } = useRegister();
+  const { mutate, isPending } = useRegister();
   const onSubmit: SubmitHandler<PasswordForm> = async (data) => {
     if (!isValid) return;
     mutate(
@@ -64,6 +65,7 @@ export default function CreatePasswordDialog({
   };
   return (
     <>
+      <LoadingComponent open={isPending} />
       <Drawer
         sx={{
           '& .MuiDrawer-paper': {
@@ -75,7 +77,7 @@ export default function CreatePasswordDialog({
         }}
         anchor={'bottom'}
         open={open}
-        onClose={onClose}
+        onClose={() => onClose(undefined)}
       >
         <Box maxWidth={'sm'} minHeight={'70vh'} padding={'1em'}>
           <CreatePasswordComponent
@@ -98,7 +100,7 @@ export default function CreatePasswordDialog({
         open={openDialog}
         onClose={() => {
           setOpenDialog(false);
-          onClose();
+          onClose(undefined);
         }}
         isLink={false}
       />

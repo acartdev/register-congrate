@@ -71,6 +71,7 @@ export default function TeacherListPage() {
     },
     { value: 'ชื่อ-นามสกุล', align: 'center' },
     { value: 'แผนก', align: 'center' },
+    { value: 'ยืนยันตัวตน', align: 'center' },
   ];
   if (isTeacher) {
     headers.push({ value: 'จัดการ' });
@@ -96,7 +97,7 @@ export default function TeacherListPage() {
           <Grid alignSelf={'center'} size={'grow'}>
             <Button
               LinkComponent={Link}
-              href='/edit-user'
+              href='/edit-user?role=TEACHER'
               sx={{
                 width: '100%',
                 fontSize: 13,
@@ -151,7 +152,11 @@ export default function TeacherListPage() {
                 {shortDepartMent(list.department?.name)}
               </Typography>
             </TableCell>
-
+            <TableCell style={{ padding: '5px 9px' }} align='center'>
+              <Typography fontSize={12}>
+                {list?.isVerified ? '✅' : '❌'}
+              </Typography>
+            </TableCell>
             {isTeacher && (
               <TableCell style={{ padding: '5px 9px' }} align='right'>
                 <IconButton

@@ -3,7 +3,7 @@ import { UsersRepository } from '../repository/users.repository';
 import { RegisterForm } from '@/model/form.model';
 import { generatePasswordToken, verifyRefreshToken } from '@/helper/jwt.helper';
 import { Department, Users } from '@/generated/prisma';
-import { UserRole } from '@/model/user.model';
+import { Permission, UserRole } from '@/model/user.model';
 import { AuthRepository } from '../repository/auth.repository';
 import nodemailer from 'nodemailer';
 import { isEmpty } from 'lodash';
@@ -11,7 +11,6 @@ import { isEmpty } from 'lodash';
 export class UsersService {
   private authRepository: AuthRepository;
   private usersRepository: UsersRepository;
-
   constructor() {
     this.authRepository = new AuthRepository();
     this.usersRepository = new UsersRepository();
@@ -54,7 +53,17 @@ export class UsersService {
         error: 'Conflict',
       };
     }
-
+    switch (input?.role) {
+      case UserRole.STUDENT:
+        input.permit = Permission.VIEW;
+        break;
+      case UserRole.TEACHER:
+        input.permit = Permission.STAFF_TEACHER;
+        break;
+      default:
+        input.permit = Permission.VIEW;
+        break;
+    }
     const res = await this.usersRepository.createUser(input);
     const transporter = nodemailer.createTransport({
       service: 'gmail',

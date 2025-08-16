@@ -23,6 +23,7 @@ declare module 'next-auth' {
       email: string;
       role: UserRole;
       isVerified?: boolean;
+      deptID: number;
     };
   }
   interface User {
@@ -31,6 +32,7 @@ declare module 'next-auth' {
     email: string;
     role: UserRole;
     isVerified?: boolean;
+    deptID: number;
   }
 }
 declare module 'next-auth/adapters' {
@@ -40,6 +42,7 @@ declare module 'next-auth/adapters' {
     email: string;
     role: UserRole;
     isVerified?: boolean;
+    deptID: number;
   }
 }
 export const authOptions: NextAuthConfig = {
@@ -87,6 +90,7 @@ export const authOptions: NextAuthConfig = {
               role: mapUser.role as UserRole, // Ensure role is UserRole, not null
               uuid: mapUser.uuid ?? '', // Ensure uuid is a string, not null
               isVerified: !!mapUser.isVerified, // Ensure isVerified is boolean
+              deptID: mapUser.deptID ?? 0, // Ensure deptID is a number, default to 0 if null
               name:
                 mapUser?.firstName && mapUser?.lastName
                   ? `${mapUser.firstName} ${mapUser.lastName}`
@@ -139,6 +143,7 @@ export const authOptions: NextAuthConfig = {
         token.email = user.email;
         token.role = user.role;
         token.isVerified = user.isVerified;
+        token.deptID = user.deptID;
       }
       return token;
     },
@@ -149,6 +154,7 @@ export const authOptions: NextAuthConfig = {
         session.user.email = token.email as string;
         session.user.role = token.role as UserRole;
         session.user.isVerified = token.isVerified as boolean;
+        session.user.deptID = token.deptID as number;
       }
       return session;
     },

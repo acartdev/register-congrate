@@ -18,7 +18,7 @@ export interface LogModel {
   id: number;
   type: CURD;
   message: string;
-  userID: string;
+  deptID: number;
   user: User;
   created_at: Date | string;
 }

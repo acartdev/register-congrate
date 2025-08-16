@@ -116,7 +116,7 @@ export default function StudentListPage() {
       <TableListComponent heads={headers}>
         {isLoading && (
           <TableRow>
-            <TableCell colSpan={4} align='center'>
+            <TableCell colSpan={5} align='center'>
               <CircularProgress size={24} />
             </TableCell>
           </TableRow>
