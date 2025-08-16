@@ -59,6 +59,7 @@ export class UsersRepository {
     searchTerm: string,
     role: UserRole,
     deptID: string | undefined,
+    notUserID: number,
   ): Promise<HttpResponse<Array<Users & { department: Department | null }>>> {
     const client = new PrismaClient();
     try {
@@ -70,6 +71,9 @@ export class UsersRepository {
       }
       if (deptID) {
         Object.assign(query, { deptID: +deptID });
+      }
+      if (notUserID) {
+        Object.assign(query, { id: { not: notUserID } });
       }
       if (searchTerm.trim() !== '') {
         Object.assign(query, {

@@ -32,9 +32,10 @@ export class UsersService {
     searchTerm: string,
     role: UserRole,
     deptID: string | undefined,
+    notUserID: number,
   ): Promise<HttpResponse<Users[]>> {
     const usersRepository = new UsersRepository();
-    return usersRepository.getUsersFilter(searchTerm, role, deptID);
+    return usersRepository.getUsersFilter(searchTerm, role, deptID, notUserID);
   }
 
   async createUser(input: RegisterForm): Promise<HttpResponse<string>> {

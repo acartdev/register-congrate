@@ -123,7 +123,7 @@ export default function StudentListPage() {
         )}
         {!listData?.data?.length && !isLoading && (
           <TableRow>
-            <TableCell colSpan={4} align='center'>
+            <TableCell colSpan={5} align='center'>
               <Typography color='textSecondary'>ไม่พบข้อมูล</Typography>
             </TableCell>
           </TableRow>

@@ -18,7 +18,7 @@ export interface ModalAction {
   open: boolean;
   status?: AlertColor;
   isLink?: boolean;
-  onClose: (state: boolean) => void;
+  onClose: (state: boolean | undefined) => void;
   handleClick?: VoidFunction;
 }
 

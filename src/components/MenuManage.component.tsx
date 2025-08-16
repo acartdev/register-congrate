@@ -18,7 +18,11 @@ export default function MenuManageComponent({
   const [openDelete, setOpenDelete] = useState(false);
   const { onOpenSnack, updateSnackContent } = useSnackStore();
 
-  const handlePermitClose = (state: boolean) => {
+  const handlePermitClose = (state: boolean | undefined) => {
+    if (state === undefined) {
+      setOpenPermit(false);
+      return;
+    }
     if (state) {
       updateSnackContent({
         title: 'จัดการสิทธิ์สำเร็จ',
@@ -37,7 +41,11 @@ export default function MenuManageComponent({
     }
   };
 
-  const handleDeleteClose = (state: boolean) => {
+  const handleDeleteClose = (state: boolean | undefined) => {
+    if (state === undefined) {
+      setOpenDelete(false);
+      return;
+    }
     if (state) {
       updateSnackContent({
         title: 'ลบผู้ใช้สำเร็จ',

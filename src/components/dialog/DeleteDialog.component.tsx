@@ -27,12 +27,12 @@ export default function DeleteDialog({ open, onClose, user }: ModalAction) {
   return (
     <Dialog
       open={open}
-      onClose={onClose}
+      onClose={() => onClose(undefined)}
       aria-labelledby='alert-dialog-title'
       aria-describedby='alert-dialog-description'
     >
       <LoadingComponent open={isPending} />
-      <Container sx={{ padding: 2, width: '80vw' }}>
+      <Container maxWidth='sm' sx={{ padding: 2, width: '80vw' }}>
         <Typography fontSize={20}>
           ยืนยันการลบ <DeleteIcon fontSize='medium' color='error' />
         </Typography>
@@ -51,7 +51,7 @@ export default function DeleteDialog({ open, onClose, user }: ModalAction) {
           <Button
             onClick={(e) => {
               e.stopPropagation();
-              onClose(true);
+              onClose(undefined);
             }}
             sx={{
               width: '100%',

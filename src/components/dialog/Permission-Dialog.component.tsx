@@ -43,12 +43,13 @@ export default function PermissionDialog({ open, onClose, user }: ModalAction) {
   return (
     <Dialog
       open={open}
-      onClose={onClose}
+      onClose={() => onClose(undefined)}
       aria-labelledby='alert-dialog-title'
       aria-describedby='alert-dialog-description'
     >
       <LoadingComponent open={isPending} />
       <Container
+        maxWidth='sm'
         component={'form'}
         onSubmit={handleSubmit(onSubmit)}
         noValidate
@@ -97,7 +98,7 @@ export default function PermissionDialog({ open, onClose, user }: ModalAction) {
           alignItems={'center'}
         >
           <Button
-            onClick={() => onClose(false)}
+            onClick={() => onClose(undefined)}
             sx={{
               width: '100%',
               fontSize: 18,
