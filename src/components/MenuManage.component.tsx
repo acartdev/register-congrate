@@ -6,6 +6,7 @@ import PermissionDialog from './dialog/Permission-Dialog.component';
 import { useState } from 'react';
 import DeleteDialog from './dialog/DeleteDialog.component';
 import { orange } from '@mui/material/colors';
+import { useSnackStore } from '@/_store/snackStore';
 
 export default function MenuManageComponent({
   anchorEl,
@@ -15,6 +16,26 @@ export default function MenuManageComponent({
 }: MenuManageProps) {
   const [openPermit, setOpenPermit] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
+  const { onOpenSnack, updateSnackContent } = useSnackStore();
+
+  const handlePermitClose = (state: boolean) => {
+    if (state) {
+      updateSnackContent({
+        title: 'จัดการสิทธิ์สำเร็จ',
+        description: 'คุณได้จัดการสิทธิ์ของผู้ใช้เรียบร้อยแล้ว',
+        status: 'success',
+      });
+      onOpenSnack();
+      setOpenPermit(false);
+    } else {
+      updateSnackContent({
+        title: 'จัดการสิทธิ์ไม่สำเร็จ',
+        description: 'คุณไม่สามารถจัดการสิทธิ์ของผู้ใช้ได้',
+        status: 'error',
+      });
+      onOpenSnack();
+    }
+  };
   return (
     <>
       <Menu
@@ -28,7 +49,7 @@ export default function MenuManageComponent({
             sx={{ p: 0, fontSize: 16, m: 0, color: orange[600] }}
             size='small'
             LinkComponent={Link}
-            href={`/edit-user/${user?.userID}`}
+            href={`/edit-user/${user?.uuid}`}
           >
             แก้ไข
           </Button>
@@ -56,7 +77,7 @@ export default function MenuManageComponent({
       </Menu>
       <PermissionDialog
         open={openPermit}
-        onClose={() => setOpenPermit(false)}
+        onClose={handlePermitClose}
         user={user}
       />
       <DeleteDialog

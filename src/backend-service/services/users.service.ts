@@ -6,6 +6,7 @@ import { Department, Users } from '@/generated/prisma';
 import { UserRole } from '@/model/user.model';
 import { AuthRepository } from '../repository/auth.repository';
 import nodemailer from 'nodemailer';
+import { isEmpty } from 'lodash';
 
 export class UsersService {
   private authRepository: AuthRepository;
@@ -106,5 +107,21 @@ export class UsersService {
     };
     await transporter.sendMail(mailOptions);
     return res;
+  }
+
+  async getUserByUUID(uuid: string): Promise<HttpResponse<Users>> {
+    const result = await this.authRepository.getUserByUserId(uuid);
+    if (!isEmpty(result)) {
+      return {
+        status: 200,
+        message: '',
+        data: result,
+      };
+    } else {
+      return {
+        status: 404,
+        message: 'ไม่พบผู้ใช้งาน',
+      };
+    }
   }
 }

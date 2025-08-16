@@ -70,3 +70,12 @@ export const useCreateUser = () => {
     },
   });
 };
+
+export const useGetUserByUUID = (uuid: string) => {
+  const userService = new UserService();
+  return useQuery({
+    queryKey: ['get_user_by_uuid', uuid],
+    queryFn: async (): Promise<HttpResponse<User>> =>
+      userService.getUserByUUID(uuid),
+  });
+};

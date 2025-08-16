@@ -89,4 +89,12 @@ export class UserService {
     const data = result.json();
     return data;
   }
+  async getUserByUUID(uuid: string): Promise<HttpResponse<User>> {
+    const result = await fetch(`/api/users/${uuid}`, {
+      method: 'GET',
+      credentials: 'same-origin',
+    });
+    const data = result.json();
+    return data;
+  }
 }

@@ -18,6 +18,7 @@ import { Controller } from 'react-hook-form';
 export default function RegisterFormComponent({
   isReadOnly,
   formControl,
+  isEdit = false,
 }: FormAction<RegisterForm>) {
   const {
     register,
@@ -32,8 +33,8 @@ export default function RegisterFormComponent({
         size='small'
         slotProps={{
           input: {
-            readOnly: !isEmpty(getValues('userID')) && isReadOnly,
-            disabled: !isEmpty(getValues('userID')) && isReadOnly,
+            readOnly: !isEmpty(getValues('userID')) && isEdit,
+            disabled: !isEmpty(getValues('userID')) && isEdit,
           },
           htmlInput: {
             inputMode: 'numeric',

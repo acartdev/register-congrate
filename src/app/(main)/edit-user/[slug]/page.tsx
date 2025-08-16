@@ -1,20 +1,14 @@
 'use client';
 import { useSnackStore } from '@/_store/snackStore';
+import LoadingComponent from '@/components/Loading.component';
 import RegisterFormComponent from '@/components/Register-Form.component';
-import { mockUsers } from '@/data/mock';
+import { useGetUserByUUID, useUpdateUser } from '@/hook/user.hook';
 import { NamePrefix, RegisterForm } from '@/model/form.model';
 import { buttonBgLinear } from '@/theme/utils';
-import {
-  Backdrop,
-  Box,
-  Button,
-  CircularProgress,
-  Divider,
-  Stack,
-  Typography,
-} from '@mui/material';
+import { Box, Button, Divider, Stack, Typography } from '@mui/material';
+import { isEmpty } from 'lodash';
 import { useRouter } from 'next/navigation';
-import { use, useEffect, useState } from 'react';
+import { use, useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 
 export default function EditUserPages({
@@ -23,10 +17,10 @@ export default function EditUserPages({
   params: Promise<{ slug: string }>;
 }) {
   const router = useRouter();
-  const [isLoad, setIsload] = useState(true);
   const { onOpenSnack, updateSnackContent } = useSnackStore();
-
+  const { mutate: updateUser, isPending: isLoading } = useUpdateUser();
   const { slug } = use(params);
+  const { data: userData, isPending } = useGetUserByUUID(slug);
   const formControl = useForm<RegisterForm>({
     defaultValues: {
       prefix: NamePrefix.MR,
@@ -42,15 +36,11 @@ export default function EditUserPages({
     reset,
     watch,
     handleSubmit,
-    formState: { isDirty, isSubmitSuccessful },
+    formState: { isDirty, isSubmitSuccessful, isValid },
   } = formControl;
   useEffect(() => {
-    if (isLoad) {
-      const existUser = mockUsers.find((user) => user.userID === slug);
-      setTimeout(() => {
-        reset(existUser);
-        setIsload(false);
-      }, 2000);
+    if (!isPending) {
+      reset(userData?.data);
     }
     if (isSubmitSuccessful) {
       reset(watch(), {
@@ -59,8 +49,8 @@ export default function EditUserPages({
         keepDefaultValues: false,
       });
     }
-  }, [isSubmitSuccessful, reset]);
-  const onSubmit: SubmitHandler<RegisterForm> = () => {
+  }, [isSubmitSuccessful, reset, isPending]);
+  const onSubmit: SubmitHandler<RegisterForm> = (values) => {
     if (!isDirty) {
       updateSnackContent({
         status: 'warning',
@@ -69,24 +59,37 @@ export default function EditUserPages({
       onOpenSnack();
       return;
     }
-    updateSnackContent({
-      title: 'แก้ไขข้อมูลสำเร็จ',
-      status: 'success',
-    });
-    onOpenSnack();
-    router.back();
+    if (isValid) {
+      updateUser(
+        { ...values, uuid: userData?.data?.uuid },
+        {
+          onSuccess: (data) => {
+            if (data.status === 200) {
+              updateSnackContent({
+                status: 'success',
+                title: 'บันทึกข้อมูลสำเร็จ',
+              });
+              onOpenSnack();
+              router.back();
+            } else {
+              updateSnackContent({
+                status: 'error',
+                title: data.message || 'เกิดข้อผิดพลาด',
+              });
+              onOpenSnack();
+            }
+          },
+        },
+      );
+    }
   };
   return (
     <Box>
+      <LoadingComponent open={isLoading} />
       <Typography fontSize={18}>แก้ไขข้อมูล</Typography>
       <Divider sx={{ marginBottom: 4 }} />
-      {isLoad ? (
-        <Backdrop
-          sx={(theme) => ({ color: '#fff', zIndex: theme.zIndex.drawer + 1 })}
-          open={isLoad}
-        >
-          <CircularProgress color='inherit' />
-        </Backdrop>
+      {isPending ? (
+        <LoadingComponent open={isPending} />
       ) : (
         <Stack
           component={'form'}
@@ -95,7 +98,11 @@ export default function EditUserPages({
           justifyContent={'center'}
           spacing={2}
         >
-          <RegisterFormComponent formControl={formControl} isReadOnly={false} />
+          <RegisterFormComponent
+            formControl={formControl}
+            isEdit={true}
+            isReadOnly={false}
+          />
           <Box
             display={'flex'}
             gap={2}

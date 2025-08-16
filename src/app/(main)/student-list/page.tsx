@@ -53,6 +53,7 @@ export default function StudentListPage() {
     },
     { value: 'ชื่อ-นามสกุล', align: 'center' },
     { value: 'แผนก', align: 'center' },
+    { value: 'ยืนยันตัวตน', align: 'center' },
     { value: 'จัดการ' },
   ];
   useEffect(() => {
@@ -157,6 +158,11 @@ export default function StudentListPage() {
             <TableCell style={{ padding: '5px 9px' }} align='center'>
               <Typography fontSize={12}>
                 {shortDepartMent(list?.department?.name)}
+              </Typography>
+            </TableCell>
+            <TableCell style={{ padding: '5px 9px' }} align='center'>
+              <Typography fontSize={12}>
+                {list?.isVerified ? '✅' : '❌'}
               </Typography>
             </TableCell>
             <TableCell style={{ padding: '5px 9px' }} align='right'>

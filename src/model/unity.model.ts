@@ -18,12 +18,13 @@ export interface ModalAction {
   open: boolean;
   status?: AlertColor;
   isLink?: boolean;
-  onClose: () => void;
+  onClose: (state: boolean) => void;
   handleClick?: VoidFunction;
 }
 
 export interface FormAction<T extends FieldValues> {
   isReadOnly: boolean;
+  isEdit?: boolean;
   formControl: {
     register: UseFormRegister<T>;
     formState: FormState<T>;

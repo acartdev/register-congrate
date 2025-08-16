@@ -152,6 +152,7 @@ export default function Homepage() {
         ) : (
           <RegisterFormComponent
             isReadOnly={isEdit === false}
+            isEdit={isEdit}
             formControl={formControl}
           />
         )}
