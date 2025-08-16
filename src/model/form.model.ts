@@ -54,4 +54,5 @@ export interface TableHeadModel {
 
 export interface SearchProps {
   placholder: string;
+  handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }

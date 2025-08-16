@@ -1,9 +1,13 @@
 import { TextField, InputAdornment } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import { SearchProps } from '@/model/form.model';
-export default function SearchComponent({ placholder }: SearchProps) {
+export default function SearchComponent({
+  placholder,
+  handleChange,
+}: SearchProps) {
   return (
     <TextField
+      onChange={handleChange}
       margin='dense'
       id='search'
       fullWidth

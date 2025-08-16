@@ -5,6 +5,8 @@ import { PrismaAdapter } from '@auth/prisma-adapter';
 import { isEmpty } from 'lodash';
 import { AuthErrorCode } from '@/model/http.model';
 import { NextResponse } from 'next/server';
+import { UserRole } from '@/model/user.model';
+import type { AdapterUser } from 'next-auth/adapters';
 const client = new PrismaClient();
 class CustomError extends CredentialsSignin {
   code: AuthErrorCode = AuthErrorCode.INVALID_CREDENTIALS;
@@ -13,7 +15,33 @@ class CustomError extends CredentialsSignin {
     this.code = code;
   }
 }
-
+declare module 'next-auth' {
+  interface Session {
+    user: {
+      id: string; // Changed from number to string to match assignment
+      uuid: string;
+      email: string;
+      role: UserRole;
+      isVerified?: boolean;
+    };
+  }
+  interface User {
+    id: string; // Changed from number to string to match assignment
+    uuid: string;
+    email: string;
+    role: UserRole;
+    isVerified?: boolean;
+  }
+}
+declare module 'next-auth/adapters' {
+  interface AdapterUser {
+    id: string; // Changed from number to string to match assignment
+    uuid: string;
+    email: string;
+    role: UserRole;
+    isVerified?: boolean;
+  }
+}
 export const authOptions: NextAuthConfig = {
   trustHost: true,
   adapter: PrismaAdapter(client),
@@ -54,9 +82,15 @@ export const authOptions: NextAuthConfig = {
               throw new CustomError(AuthErrorCode.USER_NOT_VERIFIED);
             }
             return {
-              id: String(mapUser.uuid),
-              name: mapUser.firstName + ' ' + mapUser.lastName,
+              id: String(mapUser.id),
               email: mapUser.email,
+              role: mapUser.role as UserRole, // Ensure role is UserRole, not null
+              uuid: mapUser.uuid ?? '', // Ensure uuid is a string, not null
+              isVerified: !!mapUser.isVerified, // Ensure isVerified is boolean
+              name:
+                mapUser?.firstName && mapUser?.lastName
+                  ? `${mapUser.firstName} ${mapUser.lastName}`
+                  : null, // Optional: add name if available
             };
           } else {
             throw new CustomError(AuthErrorCode.INVALID_PASSWORD);
@@ -95,12 +129,20 @@ export const authOptions: NextAuthConfig = {
     jwt: async ({ token, user }) => {
       if (user) {
         token.id = user.id;
+        token.uuid = user.uuid;
+        token.email = user.email;
+        token.role = user.role;
+        token.isVerified = user.isVerified;
       }
       return token;
     },
     session: async ({ session, token }) => {
       if (session.user) {
         session.user.id = token.id as string;
+        session.user.uuid = token.uuid as string;
+        session.user.email = token.email as string;
+        session.user.role = token.role as UserRole;
+        session.user.isVerified = token.isVerified as boolean;
       }
       return session;
     },

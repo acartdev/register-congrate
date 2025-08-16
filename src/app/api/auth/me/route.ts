@@ -1,5 +1,4 @@
 import { NextResponse } from 'next/server';
-import { verifyAccessToken } from '@/helper/jwt.helper';
 import { AuthService } from '@/backend-service/services/auth.service';
 import { auth } from '@/config/auth';
 
@@ -20,7 +19,7 @@ export async function GET(req: Request) {
       );
     }
     const authService = new AuthService();
-    const userData = await authService.getUserById(session.user.id as string);
+    const userData = await authService.getUserById(session.user.uuid as string);
     return NextResponse.json(
       {
         status: 200,

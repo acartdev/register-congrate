@@ -32,6 +32,7 @@ model Users {
   password    String
   isVerified  Boolean     @default(false)
   activities   Activity[]
+  registerActivities RegisterActivity[]
 }
 
 enum NamePrefix {
@@ -63,4 +64,16 @@ model Activity {
   user_id  Int
 
   users       Users    @relation(fields: [user_id], references: [id])
+  registerActivities RegisterActivity[]
+}
+
+model RegisterActivity {
+  id          Int      @id @default(autoincrement())
+  activity_id Int
+  user_id     Int
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+  
+  users       Users    @relation(fields: [user_id], references: [id])
+  activity    Activity @relation(fields: [activity_id], references: [id])
 }
