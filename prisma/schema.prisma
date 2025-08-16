@@ -28,11 +28,12 @@ model Users {
   permit      Permission?
   created_at  DateTime    @default(now())
   updated_at  DateTime    @updatedAt
-  department  String?
   password    String
   isVerified  Boolean     @default(false)
   activities   Activity[]
   registerActivities RegisterActivity[]
+
+  department    Department? @relation(fields: [deptID], references: [id])
 }
 
 enum NamePrefix {
@@ -76,4 +77,12 @@ model RegisterActivity {
   
   users       Users    @relation(fields: [user_id], references: [id])
   activity    Activity @relation(fields: [activity_id], references: [id])
+}
+
+model Department {
+  id          Int      @id @default(autoincrement())
+  name        String
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt @default(now())
+  users       Users[]
 }

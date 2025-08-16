@@ -1,6 +1,6 @@
 import { RegisterForm } from '@/model/form.model';
 import { HttpResponse } from '@/model/http.model';
-import { User } from '@/model/user.model';
+import { Department, User } from '@/model/user.model';
 import { UserService } from '@/services/user.service';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
@@ -24,5 +24,14 @@ export const useGetMe = () => {
   return useQuery({
     queryKey: ['get_me'],
     queryFn: async (): Promise<HttpResponse<User>> => userService.getMe(),
+  });
+};
+
+export const useGetDepartment = () => {
+  const userService = new UserService();
+  return useQuery({
+    queryKey: ['get_department'],
+    queryFn: async (): Promise<HttpResponse<Department[]>> =>
+      userService.getDepartment(),
   });
 };

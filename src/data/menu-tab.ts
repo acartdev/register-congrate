@@ -34,7 +34,6 @@ export const menuTab: MenuModel = {
     { id: 2, name: 'รายการลงทะเบียน', Icon: ReceiptLongIcon, path: '/list' },
     { id: 3, name: 'รายชื่ออาจารย์', Icon: Person3Icon, path: '/teacher-list' },
     { id: 4, name: 'รายชื่อนักศึกษา', Icon: PeopleIcon, path: '/student-list' },
-    { id: 5, name: 'คิวอาร์โค้ด', Icon: QrCodeScannerIcon, path: '/qr-code' },
     {
       id: 6,
       name: 'จัดการประวัติ',
@@ -58,6 +57,5 @@ export const menuTab: MenuModel = {
     { id: 1, name: 'ข้อมูลส่วนตัว', Icon: PersonIcon, path: '/home' },
     { id: 2, name: 'รายการลงทะเบียน', Icon: ReceiptLongIcon, path: '/list' },
     { id: 3, name: 'รายชื่ออาจารย์', Icon: Person3Icon, path: '/teacher-list' },
-    { id: 4, name: 'คิวอาร์โค้ด', Icon: QrCodeScannerIcon, path: '/qr-code' },
   ],
 };

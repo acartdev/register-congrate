@@ -2,6 +2,7 @@ import { HttpResponse } from '@/model/http.model';
 import { UsersRepository } from '../repository/users.repository';
 import { RegisterForm } from '@/model/form.model';
 import { verifyRefreshToken } from '@/helper/jwt.helper';
+import { Department } from '@/generated/prisma';
 
 export class UsersService {
   async updateUser(user: RegisterForm): Promise<HttpResponse<string>> {
@@ -14,5 +15,9 @@ export class UsersService {
     const email = data!.email;
     const uuid = data!.userID;
     return usersRepository.verifyUser(email, uuid);
+  }
+  async getDepartments(): Promise<HttpResponse<Department[]>> {
+    const usersRepository = new UsersRepository();
+    return usersRepository.getDepartments();
   }
 }

@@ -1,4 +1,4 @@
-import { PrismaClient } from '@/generated/prisma';
+import { Department, PrismaClient } from '@/generated/prisma';
 import { RegisterForm } from '@/model/form.model';
 import { HttpResponse } from '@/model/http.model';
 
@@ -39,6 +39,17 @@ export class UsersRepository {
       };
     } catch {
       return { message: 'เกิดข้อผิดพลาดในการตรวจสอบผู้ใช้', status: 500 };
+    } finally {
+      await client.$disconnect();
+    }
+  }
+  async getDepartments(): Promise<HttpResponse<Department[]>> {
+    const client = new PrismaClient();
+    try {
+      const departments = await client.department.findMany();
+      return { data: departments, status: 200 };
+    } catch {
+      return { message: 'เกิดข้อผิดพลาดในการดึงข้อมูลแผนก', status: 500 };
     } finally {
       await client.$disconnect();
     }

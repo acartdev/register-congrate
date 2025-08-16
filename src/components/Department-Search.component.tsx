@@ -1,4 +1,4 @@
-import { departmentDefault } from '@/data/department';
+import { useGetDepartment } from '@/hook/user.hook';
 import {
   FormControl,
   InputLabel,
@@ -8,6 +8,7 @@ import {
 } from '@mui/material';
 
 export default function DepartMentSearchComponent() {
+  const { data: departments } = useGetDepartment();
   return (
     <FormControl fullWidth margin='dense' size='small'>
       <InputLabel id='select-prefix-list'>แผนกวิชา</InputLabel>
@@ -18,7 +19,7 @@ export default function DepartMentSearchComponent() {
         label='แผนกวิชา'
       >
         <MenuItem value={0}>---ค้นหาแผนก---</MenuItem>
-        {departmentDefault.map((item, key) => (
+        {departments?.data?.map((item, key) => (
           <MenuItem key={key} value={item.id}>
             <Typography>{item.name}</Typography>
           </MenuItem>

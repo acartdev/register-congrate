@@ -1,8 +1,9 @@
 'use client';
-import { departmentDefault } from '@/data/department';
+import { useGetDepartment } from '@/hook/user.hook';
 import { NamePrefix, RegisterForm } from '@/model/form.model';
 import { FormAction } from '@/model/unity.model';
 import {
+  CircularProgress,
   FormControl,
   Grid,
   InputLabel,
@@ -12,6 +13,7 @@ import {
   TextField,
 } from '@mui/material';
 import { isEmpty } from 'lodash';
+import { Controller } from 'react-hook-form';
 
 export default function RegisterFormComponent({
   isReadOnly,
@@ -22,6 +24,7 @@ export default function RegisterFormComponent({
     formState: { errors },
     getValues,
   } = formControl;
+  const { data: departments, isPending } = useGetDepartment();
 
   return (
     <Stack paddingX={3} spacing={2}>
@@ -138,26 +141,43 @@ export default function RegisterFormComponent({
       />
       <FormControl size='small'>
         <InputLabel id='select-prefix-list'>แผนกวิชา</InputLabel>
-        <Select
-          slotProps={{
-            input: {
-              readOnly: isReadOnly,
-            },
-          }}
-          labelId='select-prefix-list'
-          id='select-prefix'
-          defaultValue={1}
-          label='แผนกวิชา'
-          value={getValues('deptID')}
-          {...register('deptID')}
-        >
-          {departmentDefault.map((item, key) => (
-            <MenuItem key={key} value={item.id}>
-              {item.name}
-            </MenuItem>
-          ))}
-        </Select>
-        {/* <FormHelperText>ID ที่เลือก: {watch('deptID')}</FormHelperText> */}
+        <Controller
+          name='deptID'
+          control={formControl.control}
+          defaultValue={0}
+          render={({ field }) => (
+            <Select
+              {...field}
+              labelId='select-dept-list'
+              id='select-dept'
+              label='แผนกวิชา'
+              size='small'
+              slotProps={{
+                input: {
+                  readOnly: isReadOnly,
+                },
+              }}
+              value={
+                departments?.data?.some((item) => item.id === field.value)
+                  ? field.value
+                  : 0
+              }
+            >
+              <MenuItem value={0} disabled>
+                เลือกแผนกวิชา
+              </MenuItem>
+              {isPending ? (
+                <CircularProgress size={24} />
+              ) : (
+                departments?.data?.map((item, key) => (
+                  <MenuItem key={key} value={item.id}>
+                    {item.name}
+                  </MenuItem>
+                ))
+              )}
+            </Select>
+          )}
+        />
       </FormControl>
     </Stack>
   );

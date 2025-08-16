@@ -1,4 +1,5 @@
 import {
+  Control,
   FieldValues,
   FormState,
   UseFormGetValues,
@@ -29,6 +30,7 @@ export interface FormAction<T extends FieldValues> {
     handleSubmit: UseFormHandleSubmit<T, T>;
     watch: UseFormWatch<T>;
     getValues: UseFormGetValues<T>;
+    control: Control<T, any, T>;
   };
 }
 

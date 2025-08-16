@@ -28,16 +28,22 @@ export class ListsRepository {
   ): Promise<HttpResponse<RegisterActivity[]>> {
     const client = new PrismaClient();
     try {
-      const activities = await client.registerActivity.findMany({
-        where: {
+      const query = {};
+      if (search.trim() !== '') {
+        Object.assign(query, {
+          OR: [
+            { name: { contains: search } },
+            { description: { contains: search } },
+          ],
+        });
+      }
+      if (userID !== -1) {
+        Object.assign(query, {
           user_id: userID,
-          activity: {
-            OR: [
-              { name: { contains: search } },
-              { description: { contains: search } },
-            ],
-          },
-        },
+        });
+      }
+      const activities = await client.registerActivity.findMany({
+        where: query,
         include: {
           activity: true,
         },

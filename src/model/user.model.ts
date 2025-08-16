@@ -34,3 +34,10 @@ export enum Permission {
   STAFF_STUDENT = 'STAFF_STUDENT',
   VIEW = 'VIEW',
 }
+
+export interface Department {
+  id: number;
+  name: string;
+  created_at: Date | string;
+  updated_at: Date | string;
+}
