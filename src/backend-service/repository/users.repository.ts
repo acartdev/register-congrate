@@ -102,4 +102,51 @@ export class UsersRepository {
       await client.$disconnect();
     }
   }
+
+  async createUser(input: RegisterForm): Promise<HttpResponse<string>> {
+    const client = new PrismaClient();
+
+    try {
+      const user = await client.users.create({
+        data: {
+          email: input.email,
+          firstName: input.firstName,
+          lastName: input.lastName,
+          phone: input.phone,
+          userID: input.userID,
+          deptID: input.deptID,
+          role: input.role,
+          prefix: input.prefix,
+          password: '',
+        },
+      });
+      return { data: user.uuid!, message: 'สร้างผู้ใช้สำเร็จ', status: 201 };
+    } catch {
+      return { message: 'เกิดข้อผิดพลาดในการสร้างผู้ใช้', status: 500 };
+    } finally {
+      await client.$disconnect();
+    }
+  }
+
+  async updateUserByUUID(
+    uuid: string,
+    data: RegisterForm,
+  ): Promise<HttpResponse<string>> {
+    const client = new PrismaClient();
+    try {
+      const updatedUser = await client.users.update({
+        where: { uuid },
+        data,
+      });
+      return {
+        data: updatedUser.uuid!,
+        message: 'อัปเดตผู้ใช้สำเร็จ',
+        status: 200,
+      };
+    } catch {
+      return { message: 'เกิดข้อผิดพลาดในการอัปเดตผู้ใช้', status: 500 };
+    } finally {
+      await client.$disconnect();
+    }
+  }
 }

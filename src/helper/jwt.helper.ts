@@ -13,6 +13,9 @@ export interface JWTPayload {
   email: string;
 }
 
+export interface JWTPasswordPayload {
+  uuid: string;
+}
 export const generateAccessToken = (payload: JWTPayload): string => {
   return jwt.sign(payload, ACCESS_TOKEN_SECRET, { expiresIn: '15m' });
 };
@@ -21,6 +24,9 @@ export const generateRefreshToken = (payload: JWTPayload): string => {
   return jwt.sign(payload, REFRESH_TOKEN_SECRET, { expiresIn: '7d' });
 };
 
+export const generatePasswordToken = (payload: JWTPasswordPayload): string => {
+  return jwt.sign(payload, REFRESH_TOKEN_SECRET, { expiresIn: '7d' });
+};
 export const verifyAccessToken = (token: string): DecodedToken | null => {
   try {
     return jwt.verify(token, ACCESS_TOKEN_SECRET) as DecodedToken;
@@ -32,6 +38,14 @@ export const verifyAccessToken = (token: string): DecodedToken | null => {
 export const verifyRefreshToken = (token: string): DecodedToken | null => {
   try {
     return jwt.verify(token, REFRESH_TOKEN_SECRET) as DecodedToken;
+  } catch {
+    return null;
+  }
+};
+
+export const verifyPasswordToken = (token: string): { uuid: string } | null => {
+  try {
+    return jwt.verify(token, REFRESH_TOKEN_SECRET) as { uuid: string };
   } catch {
     return null;
   }

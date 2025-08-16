@@ -23,8 +23,20 @@ export class UserService {
     const data = result.json();
     return data;
   }
-  async createUser(user: RegisterForm): Promise<HttpResponse<string>> {
+  async register(user: RegisterForm): Promise<HttpResponse<string>> {
     const result = await fetch('/api/auth/register', {
+      method: 'POST',
+      credentials: 'same-origin',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(user),
+    });
+    const data = result.json();
+    return data;
+  }
+  async createUser(user: RegisterForm): Promise<HttpResponse<string>> {
+    const result = await fetch('/api/users', {
       method: 'POST',
       credentials: 'same-origin',
       headers: {
@@ -56,6 +68,23 @@ export class UserService {
     const result = await fetch(query, {
       method: 'GET',
       credentials: 'same-origin',
+    });
+    const data = result.json();
+    return data;
+  }
+
+  async createPassword(input: {
+    password: string;
+    confirmPassword: string;
+    token: string;
+  }): Promise<HttpResponse<string>> {
+    const result = await fetch('/api/auth/create-password', {
+      method: 'POST',
+      credentials: 'same-origin',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(input),
     });
     const data = result.json();
     return data;

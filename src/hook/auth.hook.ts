@@ -8,6 +8,18 @@ export const useRegister = () => {
   return useMutation({
     mutationKey: ['create_user'],
     mutationFn: async (input: RegisterForm): Promise<HttpResponse<string>> =>
-      userService.createUser(input),
+      userService.register(input),
+  });
+};
+
+export const useCreatePassword = () => {
+  const userService = new UserService();
+  return useMutation({
+    mutationKey: ['create_password'],
+    mutationFn: async (input: {
+      password: string;
+      confirmPassword: string;
+      token: string;
+    }): Promise<HttpResponse<string>> => userService.createPassword(input),
   });
 };

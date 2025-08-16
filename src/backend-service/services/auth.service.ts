@@ -5,12 +5,15 @@ import { HttpResponse } from '@/model/http.model';
 import bcrypt from 'bcrypt';
 import { Users } from '@/generated/prisma';
 import nodemailer from 'nodemailer';
-import { Jwt } from 'jsonwebtoken';
-import { generateRefreshToken } from '@/helper/jwt.helper';
+import { generateRefreshToken, verifyPasswordToken } from '@/helper/jwt.helper';
+import { isEmpty } from 'lodash';
+import { UsersRepository } from '../repository/users.repository';
 export class AuthService {
   private authRepository: AuthRepository;
+  private userRepository: UsersRepository;
   constructor() {
     this.authRepository = new AuthRepository();
+    this.userRepository = new UsersRepository();
   }
   async register(
     register: RegisterForm & PasswordForm,
@@ -104,6 +107,54 @@ export class AuthService {
       return null;
     } catch {
       return null;
+    }
+  }
+  async createPassword(input: {
+    password: string;
+    confirmPassword: string;
+    token: string;
+  }): Promise<HttpResponse<string>> {
+    try {
+      const { password, confirmPassword, token } = input;
+      const verify = verifyPasswordToken(token);
+      if (verify?.uuid) {
+        const user = await this.authRepository.getUserByUserId(verify?.uuid);
+        if (!isEmpty(user)) {
+          if (password !== confirmPassword) {
+            return {
+              status: 400,
+              message: 'รหัสผ่านไม่ตรงกัน',
+              error: 'Bad Request',
+            };
+          } else {
+            const salt = await bcrypt.genSalt(10);
+            const hashedPassword = await bcrypt.hash(password, salt);
+            await this.userRepository.updateUserByUUID(verify?.uuid, {
+              password: hashedPassword,
+              isVerified: true,
+            } as unknown as RegisterForm);
+            return {
+              status: 200,
+              message: 'สร้างรหัสผ่านสำเร็จ',
+            };
+          }
+        } else {
+          return {
+            status: 404,
+            message: 'ไม่พบผู้ใช้งานในระบบ',
+          };
+        }
+      } else {
+        return {
+          status: 401,
+          message: 'เกิดข้อผิดพลาดกับระบบ หรือ Token ไม่ถูกต้อง',
+        };
+      }
+    } catch {
+      return {
+        status: 500,
+        message: 'เกิดข้อผิดพลาด',
+      };
     }
   }
 }

@@ -55,3 +55,18 @@ export const useGetUsersFilter = (
     > => userService.getUsersFilter(searchTerm, role, deptID),
   });
 };
+
+export const useCreateUser = () => {
+  const userService = new UserService();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationKey: ['create_user'],
+    mutationFn: async (input: RegisterForm): Promise<HttpResponse<string>> =>
+      userService.createUser(input),
+    onSuccess: (response: HttpResponse<string>) => {
+      if (response.status === 201) {
+        queryClient.invalidateQueries({ queryKey: ['get_users_filter'] });
+      }
+    },
+  });
+};

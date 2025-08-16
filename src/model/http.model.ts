@@ -8,6 +8,6 @@ export interface HttpResponse<T> {
 export enum AuthErrorCode {
   USER_NOT_FOUND = 'ไม่พบบัญชีผู้ใช้',
   INVALID_CREDENTIALS = 'ข้อมูลประจำตัวไม่ถูกต้อง',
-  INVALID_PASSWORD = 'รหัสผ่านไม่ถูกต้อง',
+  INVALID_PASSWORD = 'ชื่อผู้ใช้ หรือ รหัสผ่านไม่ถูกต้อง',
   USER_NOT_VERIFIED = 'บัญชีผู้ใช้ยังไม่ได้รับการยืนยัน',
 }

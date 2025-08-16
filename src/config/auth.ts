@@ -116,6 +116,12 @@ export const authOptions: NextAuthConfig = {
       if (nextUrl.pathname.startsWith('/register')) {
         return true;
       }
+      if (nextUrl.pathname.startsWith('/login')) {
+        return true;
+      }
+      if (nextUrl.pathname.startsWith('/password')) {
+        return true;
+      }
       if (!isLogin) {
         return false;
       }
