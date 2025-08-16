@@ -9,6 +9,5 @@ export const useGetList = (search: string = '') => {
     queryKey: ['get_list', search],
     queryFn: async (): Promise<HttpResponse<ListModel[]>> =>
       listService.getList(search),
-    enabled: search.length > 0,
   });
 };

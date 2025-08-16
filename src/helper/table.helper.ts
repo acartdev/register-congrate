@@ -31,6 +31,14 @@ export function shortDepartMent(dept: string | undefined) {
   switch (dept) {
     case 'เทคโนโลยีสารสนเทศ':
       return 'ท.ส.';
+    case 'เทคโนโลยีธุรกิจดิจิทัล':
+      return 'ท.ธ.';
+    case 'การบัญชี':
+      return 'บช.';
+    case 'การโรงแรม':
+      return 'ร.ม.';
+    case 'การจัดการโลจิสติกส์และซัพพลายเชน':
+      return 'ลจ.';
     default:
       return '-';
   }

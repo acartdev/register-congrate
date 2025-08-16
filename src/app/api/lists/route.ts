@@ -20,9 +20,6 @@ export const GET = async (request: NextRequest) => {
       return NextResponse.json(result, { status: result.status });
     }
   } catch {
-    return NextResponse.json(
-      { message: 'Internal Server Error' },
-      { status: 500 },
-    );
+    return NextResponse.json({ message: 'เกิดข้อผิดพลาด' }, { status: 500 });
   }
 };

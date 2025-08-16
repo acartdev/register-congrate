@@ -23,7 +23,7 @@ import { useGetList } from '@/hook/list.hook';
 import { useEffect, useState } from 'react';
 import LoadingComponent from '@/components/Loading.component';
 import { useUserStore } from '@/_store/userStore';
-import { UserRole } from '@/model/user.model';
+import { Permission, UserRole } from '@/model/user.model';
 export default function ListRegisterPage() {
   const router = useRouter();
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
@@ -49,14 +49,17 @@ export default function ListRegisterPage() {
   const { data: listData, isLoading } = useGetList(debouncedSearchTerm);
 
   const handleRowClick = (id: number) => {
-    router.push(`/qr-code/${id}`);
+    if (user?.permit === Permission.ADMIN) {
+      router.push(`/qr-code/${id}`);
+    }
+    return;
   };
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
   };
 
   const AddButton =
-    user?.role === UserRole.ADMIN ? (
+    user?.permit === Permission.ADMIN ? (
       <Grid alignSelf={'center'} size={'grow'}>
         <Button
           LinkComponent={Link}

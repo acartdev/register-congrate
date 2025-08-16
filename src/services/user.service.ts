@@ -1,6 +1,7 @@
+import { Users } from '@/generated/prisma';
 import { RegisterForm } from '@/model/form.model';
 import { HttpResponse } from '@/model/http.model';
-import { Department, User } from '@/model/user.model';
+import { Department, User, UserRole } from '@/model/user.model';
 export class UserService {
   async updateUser(user: RegisterForm): Promise<HttpResponse<string>> {
     const result = await fetch(`/api/users/${user.uuid}`, {
@@ -39,6 +40,22 @@ export class UserService {
       method: 'GET',
       credentials: 'same-origin',
     });
+    const data = result.json();
+    return data;
+  }
+
+  async getUsersFilter(
+    searchTerm: string,
+    role: UserRole,
+    deptID: number | undefined,
+  ): Promise<HttpResponse<Array<Users & { department: Department | null }>>> {
+    const result = await fetch(
+      `/api/users?role=${role}&q=${searchTerm}&deptID=${deptID}`,
+      {
+        method: 'GET',
+        credentials: 'same-origin',
+      },
+    );
     const data = result.json();
     return data;
   }

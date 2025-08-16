@@ -5,6 +5,7 @@ import Link from 'next/link';
 import PermissionDialog from './dialog/Permission-Dialog.component';
 import { useState } from 'react';
 import DeleteDialog from './dialog/DeleteDialog.component';
+import { orange } from '@mui/material/colors';
 
 export default function MenuManageComponent({
   anchorEl,
@@ -24,8 +25,7 @@ export default function MenuManageComponent({
       >
         <MenuItem>
           <Button
-            color='warning'
-            sx={{ p: 0, fontSize: 16, m: 0 }}
+            sx={{ p: 0, fontSize: 16, m: 0, color: orange[600] }}
             size='small'
             LinkComponent={Link}
             href={`/edit-user/${user?.userID}`}

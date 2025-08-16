@@ -1,6 +1,7 @@
-import { Department, PrismaClient } from '@/generated/prisma';
+import { Department, PrismaClient, Users } from '@/generated/prisma';
 import { RegisterForm } from '@/model/form.model';
 import { HttpResponse } from '@/model/http.model';
+import { UserRole } from '@/model/user.model';
 
 export class UsersRepository {
   async updateUser(user: RegisterForm): Promise<HttpResponse<string>> {
@@ -50,6 +51,48 @@ export class UsersRepository {
       return { data: departments, status: 200 };
     } catch {
       return { message: 'เกิดข้อผิดพลาดในการดึงข้อมูลแผนก', status: 500 };
+    } finally {
+      await client.$disconnect();
+    }
+  }
+  async getUsersFilter(
+    searchTerm: string,
+    role: UserRole,
+  ): Promise<HttpResponse<Array<Users & { department: Department | null }>>> {
+    const client = new PrismaClient();
+    try {
+      const query = {};
+      if (role) {
+        Object.assign(query, { role });
+      } else {
+        return { message: 'กรุณาเลือกบทบาทผู้ใช้', status: 400 };
+      }
+      if (searchTerm.trim() !== '') {
+        Object.assign(query, {
+          OR: [
+            { firstName: { contains: searchTerm } },
+            { lastName: { contains: searchTerm } },
+            { email: { contains: searchTerm } },
+          ],
+        });
+      }
+      const users = await client.users.findMany({
+        where: query,
+        include: {
+          department: {
+            select: {
+              id: true,
+              name: true,
+              created_at: true,
+              updated_at: true,
+            },
+          },
+        },
+        orderBy: [{ created_at: 'desc' }],
+      });
+      return { data: users, status: 200 };
+    } catch {
+      return { message: 'เกิดข้อผิดพลาดในการดึงข้อมูลผู้ใช้', status: 500 };
     } finally {
       await client.$disconnect();
     }

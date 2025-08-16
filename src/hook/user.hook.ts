@@ -1,6 +1,7 @@
+import { Users } from '@/generated/prisma';
 import { RegisterForm } from '@/model/form.model';
 import { HttpResponse } from '@/model/http.model';
-import { Department, User } from '@/model/user.model';
+import { Department, User, UserRole } from '@/model/user.model';
 import { UserService } from '@/services/user.service';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
@@ -33,5 +34,24 @@ export const useGetDepartment = () => {
     queryKey: ['get_department'],
     queryFn: async (): Promise<HttpResponse<Department[]>> =>
       userService.getDepartment(),
+  });
+};
+
+import { UseQueryResult } from '@tanstack/react-query';
+
+export const useGetUsersFilter = (
+  searchTerm: string,
+  role: UserRole,
+  deptID: number | undefined,
+): UseQueryResult<
+  HttpResponse<Array<Users & { department: Department | null }>>,
+  Error
+> => {
+  const userService = new UserService();
+  return useQuery({
+    queryKey: ['get_users_filter', searchTerm, role, deptID],
+    queryFn: async (): Promise<
+      HttpResponse<Array<Users & { department: Department | null }>>
+    > => userService.getUsersFilter(searchTerm, role, deptID),
   });
 };
