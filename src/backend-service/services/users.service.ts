@@ -124,4 +124,18 @@ export class UsersService {
       };
     }
   }
+  async deleteUser(uuid: string): Promise<HttpResponse<void>> {
+    const result = await this.usersRepository.deleteUser(uuid);
+    if (result) {
+      return {
+        status: 200,
+        message: 'ลบผู้ใช้งานสำเร็จ',
+      };
+    } else {
+      return {
+        status: 404,
+        message: 'ไม่พบผู้ใช้งาน',
+      };
+    }
+  }
 }

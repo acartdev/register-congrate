@@ -79,3 +79,18 @@ export const useGetUserByUUID = (uuid: string) => {
       userService.getUserByUUID(uuid),
   });
 };
+
+export const useDeleteUser = () => {
+  const userService = new UserService();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationKey: ['delete_user'],
+    mutationFn: async (uuid: string): Promise<HttpResponse<void>> =>
+      userService.deleteUser(uuid),
+    onSuccess: (response: HttpResponse<void>) => {
+      if (response.status === 200) {
+        queryClient.invalidateQueries({ queryKey: ['get_users_filter'] });
+      }
+    },
+  });
+};

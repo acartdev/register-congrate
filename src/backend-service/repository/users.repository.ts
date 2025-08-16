@@ -149,4 +149,21 @@ export class UsersRepository {
       await client.$disconnect();
     }
   }
+
+  async deleteUser(uuid: string): Promise<HttpResponse<void>> {
+    const client = new PrismaClient();
+    try {
+      await client.users.delete({
+        where: { uuid },
+      });
+      return {
+        status: 200,
+        message: 'ลบผู้ใช้สำเร็จ',
+      };
+    } catch {
+      return { message: 'เกิดข้อผิดพลาดในการลบผู้ใช้', status: 500 };
+    } finally {
+      await client.$disconnect();
+    }
+  }
 }

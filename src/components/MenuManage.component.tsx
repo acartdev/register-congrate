@@ -36,6 +36,25 @@ export default function MenuManageComponent({
       onOpenSnack();
     }
   };
+
+  const handleDeleteClose = (state: boolean) => {
+    if (state) {
+      updateSnackContent({
+        title: 'ลบผู้ใช้สำเร็จ',
+        description: 'คุณได้ลบผู้ใช้เรียบร้อยแล้ว',
+        status: 'success',
+      });
+      onOpenSnack();
+      setOpenDelete(false);
+    } else {
+      updateSnackContent({
+        title: 'ลบผู้ใช้ไม่สำเร็จ',
+        description: 'คุณไม่สามารถลบผู้ใช้ได้',
+        status: 'error',
+      });
+      onOpenSnack();
+    }
+  };
   return (
     <>
       <Menu
@@ -80,11 +99,7 @@ export default function MenuManageComponent({
         onClose={handlePermitClose}
         user={user}
       />
-      <DeleteDialog
-        open={openDelete}
-        onClose={() => setOpenDelete(false)}
-        user={user}
-      />
+      <DeleteDialog open={openDelete} onClose={handleDeleteClose} user={user} />
     </>
   );
 }

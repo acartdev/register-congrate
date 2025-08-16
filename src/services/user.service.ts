@@ -97,4 +97,12 @@ export class UserService {
     const data = result.json();
     return data;
   }
+  async deleteUser(uuid: string): Promise<HttpResponse<void>> {
+    const result = await fetch(`/api/users/${uuid}`, {
+      method: 'DELETE',
+      credentials: 'same-origin',
+    });
+    const data = result.json();
+    return data;
+  }
 }

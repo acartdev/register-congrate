@@ -8,7 +8,22 @@ import {
   Button,
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { useDeleteUser } from '@/hook/user.hook';
+import LoadingComponent from '../Loading.component';
 export default function DeleteDialog({ open, onClose, user }: ModalAction) {
+  const { mutate: deleteUser, isPending } = useDeleteUser();
+
+  const onSubmit = () => {
+    if (user?.uuid) {
+      deleteUser(user.uuid, {
+        onSuccess: () => {
+          onClose(true);
+        },
+      });
+    } else {
+      onClose(false);
+    }
+  };
   return (
     <Dialog
       open={open}
@@ -16,6 +31,7 @@ export default function DeleteDialog({ open, onClose, user }: ModalAction) {
       aria-labelledby='alert-dialog-title'
       aria-describedby='alert-dialog-description'
     >
+      <LoadingComponent open={isPending} />
       <Container sx={{ padding: 2, width: '80vw' }}>
         <Typography fontSize={20}>
           ยืนยันการลบ <DeleteIcon fontSize='medium' color='error' />
@@ -33,7 +49,10 @@ export default function DeleteDialog({ open, onClose, user }: ModalAction) {
           alignItems={'center'}
         >
           <Button
-            onClick={onClose}
+            onClick={(e) => {
+              e.stopPropagation();
+              onClose(true);
+            }}
             sx={{
               width: '100%',
               fontSize: 18,
@@ -55,7 +74,7 @@ export default function DeleteDialog({ open, onClose, user }: ModalAction) {
               color: 'white',
             }}
             color='error'
-            type='submit'
+            onClick={onSubmit}
             variant='contained'
           >
             ยืนยัน

@@ -37,3 +37,21 @@ export const GET = async (
     );
   }
 };
+
+export const DELETE = async (
+  request: Request,
+  { params }: { params: Promise<{ uuid: string }> },
+) => {
+  try {
+    const userService = new UsersService();
+    const { uuid } = await params;
+    const result = await userService.deleteUser(uuid);
+    return NextResponse.json(result, { status: result.status });
+  } catch (error) {
+    console.error(error);
+    return NextResponse.json(
+      { message: 'เกิดข้อผิดพลาดในการลบผู้ใช้', status: 500 },
+      { status: 500 },
+    );
+  }
+};
